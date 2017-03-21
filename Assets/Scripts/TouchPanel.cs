@@ -25,7 +25,7 @@ public class TouchPanel : MonoBehaviour
 		if (other.gameObject.tag == "MusicNote")
 		{
 			//if we perform an action
-			if (Input.GetKeyDown(KeyCode.Space) && !m_IsPressed)
+			if (Input.GetMouseButtonDown(0) && !m_IsPressed)
 			{
 				//work out the sqrmagnitude between our touch panel and the music note
 				float sqrMagnitude = (transform.position - other.transform.position).sqrMagnitude; 
@@ -46,7 +46,7 @@ public class TouchPanel : MonoBehaviour
 				}
 				m_IsPressed = true;
 			}
-			else if (Input.GetKeyUp(KeyCode.Space))
+			else if (Input.GetMouseButtonUp(0))
 			{
 				m_IsPressed = false;
 			}
