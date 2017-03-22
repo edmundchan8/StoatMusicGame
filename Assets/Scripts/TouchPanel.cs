@@ -17,6 +17,26 @@ public class TouchPanel : MonoBehaviour
 	[SerializeField]
 	float GOOD = 17f;
 
+	//Hold the gameobjects that we will use to show the text in the game
+	[SerializeField]
+	Text m_Excellent;
+	[SerializeField]
+	Text m_Good;
+	[SerializeField]
+	Text m_Poor;
+
+	//Shows the text when we hit the touch panel
+	[SerializeField]
+	GameObject m_TextResult;
+
+	//Position of text gameobject in game so that the Text gameobjects can appear on the panel.
+	//Otherwise cannot see on the screen
+	[SerializeField]
+	GameObject m_TextPosition;
+
+	void Start() 
+	{
+	}
 
 	//Checks the music note is over / on top of our touch panel
 	void OnTriggerStay2D (Collider2D other)
@@ -30,20 +50,29 @@ public class TouchPanel : MonoBehaviour
 				//work out the sqrmagnitude between our touch panel and the music note
 				float sqrMagnitude = (transform.position - other.transform.position).sqrMagnitude; 
 				//Less than 5f-8f? = Excellent
-				if (sqrMagnitude < EXCELLENT) 
+				if (sqrMagnitude < EXCELLENT)
 				{
-					print("Excellent!");
+					//Instantiate text alert
+					m_TextResult = m_Excellent.gameObject;
+					InstantiateTextGameObject();
+
+
 				}
 				//between 8f and 17f = Good
-				else if (sqrMagnitude > EXCELLENT && sqrMagnitude < GOOD) 
+				else if (sqrMagnitude > EXCELLENT && sqrMagnitude < GOOD)
 				{
-					print("Good");
+					//Instantiate text alert
+					m_TextResult = m_Good.gameObject;
+					InstantiateTextGameObject();
 				}
 				//Outside 17f is bad
-				else 
+				else
 				{
-					print("poor");
+					//Instantiate text alert
+					m_TextResult = m_Poor.gameObject;
+					InstantiateTextGameObject();
 				}
+				print(sqrMagnitude);
 				m_IsPressed = true;
 			}
 			else if (Input.GetMouseButtonUp(0))
@@ -51,5 +80,12 @@ public class TouchPanel : MonoBehaviour
 				m_IsPressed = false;
 			}
 		}
+	}
+
+	void InstantiateTextGameObject () 
+	{
+		GameObject theTextObject = Instantiate(m_TextResult, m_TextPosition.transform.position, transform.rotation) as GameObject;
+		//We use SetParent so that we can set the world position to false
+		theTextObject.transform.SetParent(m_TextPosition.transform, false);
 	}
 }
