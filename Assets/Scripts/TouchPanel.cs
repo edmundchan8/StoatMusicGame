@@ -49,30 +49,27 @@ public class TouchPanel : MonoBehaviour
 			{
 				//work out the sqrmagnitude between our touch panel and the music note
 				float sqrMagnitude = (transform.position - other.transform.position).sqrMagnitude; 
-				//Less than 5f-8f? = Excellent
+				//Less than 6.85f? = Excellent
 				if (sqrMagnitude < EXCELLENT)
 				{
 					//Instantiate text alert
 					m_TextResult = m_Excellent.gameObject;
 					InstantiateTextGameObject();
-
-
 				}
-				//between 8f and 17f = Good
+				//between 6.85f and 7f = Good
 				else if (sqrMagnitude > EXCELLENT && sqrMagnitude < GOOD)
 				{
 					//Instantiate text alert
 					m_TextResult = m_Good.gameObject;
 					InstantiateTextGameObject();
 				}
-				//Outside 17f is bad
+				//Outside 7f is bad
 				else
 				{
 					//Instantiate text alert
 					m_TextResult = m_Poor.gameObject;
 					InstantiateTextGameObject();
 				}
-				print(sqrMagnitude);
 				m_IsPressed = true;
 			}
 			else if (Input.GetMouseButtonUp(0))

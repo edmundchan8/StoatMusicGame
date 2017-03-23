@@ -3,8 +3,7 @@ using System.Collections;
 
 public class NoteMove : MonoBehaviour 
 {
-	[SerializeField]
-	float m_Speed = 50f;
+	float m_Speed = 2f;
 
 	void FixedUpdate() 
 	{
