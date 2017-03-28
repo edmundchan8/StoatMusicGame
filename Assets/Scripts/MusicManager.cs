@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class MusicManager : MonoBehaviour 
 {
@@ -17,9 +18,17 @@ public class MusicManager : MonoBehaviour
 	[SerializeField]
 	GameObject m_Notes;
 
+	[Header ("Accessor")]
+	//Textasset notepad files to hold the length of the List, and the times which the instantiate the play notes
+	[SerializeField]
+	TextAsset EASY_LEVEL_01;
+	[SerializeField]
+	string[] m_TextLines = new string[] {};
+
+
 	//Array to hold the music note instantiate times
 	[SerializeField]
-	float [] PlayNotePos = new float[] {};
+	List <float> PlayNotePos = new List<float>();
 	[SerializeField]
 	int NoteArrayToPlay = 0;
 	//Because the instantiate gameobject is further away from where we want the touch the note, instantiate the music note 2.9f early.
@@ -32,9 +41,24 @@ public class MusicManager : MonoBehaviour
 	[SerializeField]
 	float time;
 
+	void Awake()
+	{//TODO: Switch statement later.  Depending on the level, set the LEVEL_TEXT To use 
+		m_TextLines = EASY_LEVEL_01.text.Split('\n');
+	}
+
+	void Start()
+	{
+		//At the start of the game, put all values from the EASY_LEVEL_01 into the List for PlayNotePos
+		for (int i = 0; i < m_TextLines.Length; i++)
+		{
+			PlayNotePos.Add(float.Parse(m_TextLines[i]));
+		}
+	}
+
 	void Update() 
 	{
-		if (Input.GetKeyDown(KeyCode.Space))
+		//Debug purposes only
+		if (Input.GetKeyDown(KeyCode.Space) && !m_SpacePressed)
 		{
 			InstantiateMusicNotes();
 			Invoke("ReenableStartMusicAfterTime", 0.5f);
@@ -61,19 +85,19 @@ public class MusicManager : MonoBehaviour
 			//note - array value = float, but rounding the audiotime to 1 decimal place makes it a DOUBLE.
 			//CANNOT compare double == float, so below, I have made them both STRING variables
 			//THEN, I compare both strings.
-			float arrayValue = PlayNotePos[NoteArrayToPlay];
-			string newFloatValue = (arrayValue - NOTE_INSTANTIATE_OFFSET).ToString("F2");
-			string newAudioTime = System.Math.Round(audioTime, 1).ToString("F2");
-			print("new float " + newFloatValue);
-			print("new audio " + newAudioTime);
-
-			//Comparing both STRINGS
-			if (newAudioTime == newFloatValue) //&& NoteArrayToPlay <= PlayNotePos.Length)
+			if (PlayNotePos.Count <= m_TextLines.Length)
 			{
-				print("condition met");
-				InstantiateMusicNotes();
-				Invoke("ReenableStartMusicAfterTime", 0.5f);
-				NoteArrayToPlay++;
+				float arrayValue = PlayNotePos[NoteArrayToPlay];
+				string newFloatValue = (arrayValue - NOTE_INSTANTIATE_OFFSET).ToString("F2");
+				string newAudioTime = System.Math.Round(audioTime, 1).ToString("F2");
+
+				//Comparing both STRINGS
+				if (newAudioTime == newFloatValue) //&& NoteArrayToPlay <= PlayNotePos.Length)
+				{
+					InstantiateMusicNotes();
+					Invoke("ReenableStartMusicAfterTime", 0.5f);
+					NoteArrayToPlay++;
+				}
 			}
 		}
 	}
@@ -86,6 +110,7 @@ public class MusicManager : MonoBehaviour
 	public void ReenableStartMusicAfterTime () 
 	{
 		StartMusic();
+		m_SpacePressed = false;
 	}
 
 
