@@ -3,6 +3,7 @@ using System.Collections;
 
 public class NoteMove : MonoBehaviour 
 {
+	[SerializeField]
 	float m_Speed = 2.1f;
 
 	void Update() 
@@ -10,4 +11,8 @@ public class NoteMove : MonoBehaviour
 		transform.Translate(Vector2.left * m_Speed * Time.deltaTime, Space.Self);
 	}
 
+	public void SelfDestruct()
+	{
+		Destroy(gameObject);
+	}
 }
