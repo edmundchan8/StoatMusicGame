@@ -78,6 +78,7 @@ public class MusicManager : MonoBehaviour
 
 		if (m_StartMusic)
 		{
+			print("textline " +m_TextLines.Length);
 			/*print("started music");
 			print(System.Math.Round(audioTime,1));*/
 			//n.b. music note takes 2.6f seconds to get to target from instantiate point.
