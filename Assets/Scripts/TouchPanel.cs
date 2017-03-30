@@ -102,6 +102,7 @@ public class TouchPanel : MonoBehaviour
 							//Instantiate text alert
 							m_TextResult = m_Poor.gameObject;
 							InstantiateTextGameObject();
+							m_MusicArrayPos--;
 						}
 						m_IsPressed = true;
 					}
@@ -136,6 +137,20 @@ public class TouchPanel : MonoBehaviour
 		}
 	}
 
+	//if you touch a music note, then destroy it 
+	void OnTriggerStay2D(Collider2D other) 
+	{
+		if (Input.GetTouch(0).phase == TouchPhase.Began)
+		{
+			print("touched");
+			if (other.gameObject.tag == "MusicNote")
+			{
+				print(Input.touchCount);
+				Destroy(other.gameObject);
+			}
+		}
+	}
+
 
 	//TODO How about, there is a check to check how many times you have touched the screen.
 	//This should match the array we are ticking, for instance
@@ -144,11 +159,14 @@ public class TouchPanel : MonoBehaviour
 	//break combo
 	//increment the touching (so when we do array [4] it will match 5th touch, which is what it should be
 	//reset combo meter
+
 	public void MissDetected()
 	{
 		//a miss was detected, so increase the m_MusicArrayPos by one
 		m_MusicArrayPos++;
 		//reset combo counter
+
+		m_ComboText.SetActive(false);
 		m_Combo = 0;
 	}
 
