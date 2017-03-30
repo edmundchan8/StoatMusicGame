@@ -9,7 +9,7 @@ public class TouchPanel : MonoBehaviour
 
 	[Header ("CONST")]
 	[SerializeField]
-	float EXCELLENT_MIN_MAX = 0.1f;
+	float EXCELLENT_MIN_MAX = 0.15f;
 	[SerializeField]
 	float GOOD_MIN_MAX = 0.3f;
 
