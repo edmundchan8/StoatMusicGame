@@ -28,7 +28,7 @@ public class MusicManager : MonoBehaviour
 
 	//Array to hold the music note instantiate times
 	[SerializeField]
-	List <float> PlayNotePos = new List<float>();
+	public List <float> PlayNotePos = new List<float>();
 	[SerializeField]
 	int NoteArrayToPlay = 0;
 	//Because the instantiate gameobject is further away from where we want the touch the note, instantiate the music note 2.9f early.
@@ -78,7 +78,7 @@ public class MusicManager : MonoBehaviour
 
 		if (m_StartMusic)
 		{
-			print("textline " +m_TextLines.Length);
+			print("textline " + m_TextLines.Length);
 			/*print("started music");
 			print(System.Math.Round(audioTime,1));*/
 			//n.b. music note takes 2.6f seconds to get to target from instantiate point.
@@ -122,13 +122,13 @@ public class MusicManager : MonoBehaviour
 		theNote.transform.SetParent(m_NoteHolderPosition.transform, false);
 	}
 
-	public float GetCurrentPlayNotePos(int arrayValue)
-	{
-		return PlayNotePos[arrayValue];
-	}
-
 	public float GetCurrentMusicTime()
 	{
 		return m_Audiosource.time;
+	}
+
+	public List<float> GetList()
+	{
+		return PlayNotePos;
 	}
 }
