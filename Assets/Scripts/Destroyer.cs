@@ -16,5 +16,6 @@ public class Destroyer : MonoBehaviour
 		//TODO - because the note was destroyed by the barrier, it means the player didn't touch it.
 		//if the player doesn't touch it, counts as a miss
 		//also increments the array value int he the touch panel.
+		m_TouchPanel.MissDetected();
 	}
 }
