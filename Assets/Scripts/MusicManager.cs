@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -64,7 +64,7 @@ public class MusicManager : MonoBehaviour
 			Invoke("ReenableStartMusicAfterTime", 0.5f);
 			m_SpacePressed = true;
 		}
-			
+
 		//DEBUG MODE
 		//Test firing music note to target
 		/*if (m_SpacePressed)
@@ -119,5 +119,15 @@ public class MusicManager : MonoBehaviour
 		m_StartMusic = false;
 		GameObject theNote = Instantiate(m_Notes, m_NoteHolderPosition.transform.position, transform.rotation) as GameObject;
 		theNote.transform.SetParent(m_NoteHolderPosition.transform, false);
+	}
+
+	public float GetCurrentPlayNotePos(int arrayValue)
+	{
+		return PlayNotePos[arrayValue];
+	}
+
+	public float GetCurrentMusicTime()
+	{
+		return m_Audiosource.time;
 	}
 }

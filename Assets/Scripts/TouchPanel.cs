@@ -8,15 +8,10 @@ public class TouchPanel : MonoBehaviour
 	bool m_IsPressed = false;
 
 	[Header ("CONST")]
-	//float values to check the sqrmagnitude, and output the achievement for each press
 	[SerializeField]
-	float EXCELLENT_MIN = 105000f;
+	float EXCELLENT_MIN_MAX = 0.1f;
 	[SerializeField]
-	float EXCELLENT_MAX = 111000f;
-	[SerializeField]
-	float GOOD_MIN = 98000f;
-	[SerializeField]
-	float GOOD_MAX = 114000f;
+	float GOOD_MIN_MAX = 0.3f;
 
 	[Header ("Text pop ups")]
 	//Hold the gameobjects that we will use to show the text in the game
@@ -31,14 +26,22 @@ public class TouchPanel : MonoBehaviour
 	//Shows the text when we hit the touch panel
 	[SerializeField]
 	GameObject m_TextResult;
-	//the music note prefab instantiated in our game
-	public Image m_PrefabMusicNote;
 	//Position of text gameobject in game so that the Text gameobjects can appear on the panel.
 	//Otherwise cannot see on the screen
 	[SerializeField]
 	GameObject m_TextPosition;
 	[SerializeField]
 	GameObject m_ComboText;
+	[SerializeField]
+	MusicManager m_MusicManager;
+	[SerializeField]
+	float m_MusicArrayValue;
+
+	[Header ("Timers")]
+	[SerializeField]
+	float m_MusicTime;
+	[SerializeField]
+	int m_MusicArrayPos = 0;
 
 	[Header ("Combo Counters")]
 	int m_NumExcellents = 0;
@@ -48,59 +51,67 @@ public class TouchPanel : MonoBehaviour
 
 	void Update () 
 	{
+		m_MusicArrayValue = m_MusicManager.GetCurrentPlayNotePos(m_MusicArrayPos);
+		m_MusicTime = m_MusicManager.GetCurrentMusicTime();
 		OnCombo();
-	}
-
-	//Checks the music note is over / on top of our touch panel
-	void OnTriggerStay2D (Collider2D other)
-	{
-		//if what is on top of our touchpanel is the music note
-		if (other.gameObject.tag == "MusicNote")
+		//if we are touching the screen
+		if (Input.touchCount > 0)
 		{
-			//if we perform an action
-			if (Input.GetMouseButtonDown(0) && !m_IsPressed)
+			//create an instance of the touch input, first touch
+			Touch myTouch = Input.GetTouch(0);
+
+			switch(myTouch.phase)
 			{
-				//work out the sqrmagnitude between our touch panel and the music note
-				float sqrMagnitude = (transform.localPosition - other.transform.localPosition).sqrMagnitude; 
-				print(sqrMagnitude);
-				//between certain range = excellent
-				if (sqrMagnitude > EXCELLENT_MIN && sqrMagnitude < EXCELLENT_MAX)
-				{
-					//For each excellent, increase combo by 1
-					m_Combo++;
-					//Increase m_NumExcellents by 1
-					m_NumExcellents++;
-					//Instantiate text alert
-					m_TextResult = m_Excellent.gameObject;
-					InstantiateTextGameObject();
-				}
-				//between certain range = good
-				else if (sqrMagnitude > GOOD_MIN && sqrMagnitude < EXCELLENT_MIN || sqrMagnitude > EXCELLENT_MAX && sqrMagnitude < GOOD_MAX)
-				{
-					//Reset combo to 0
-					m_Combo = 0;
-					//Increase m_NumGoods by 1
-					m_NumGoods++;
-					//Instantiate text alert
-					m_TextResult = m_Good.gameObject;
-					InstantiateTextGameObject();
-				}
-				//Otherwise
-				else
-				{
-					//Reset combo to 0
-					m_Combo = 0;
-					//Increase m_NumPoors by 1
-					m_NumPoors++;
-					//Instantiate text alert
-					m_TextResult = m_Poor.gameObject;
-					InstantiateTextGameObject();
-				}
-				m_IsPressed = true;
-			}
-			else if (Input.GetMouseButtonUp(0))
-			{
-				m_IsPressed = false;
+				case TouchPhase.Began:
+					if (!m_IsPressed)
+					{
+						//Check musicManager audio time position.  
+						//The current arrayValue, give or take 0.5f seconds away from that is excellent
+						//Give or take more than 0.5f - 0.75f second from that is good
+						//more than 0.75f second from that is bad
+
+						//between certain range = excellent
+						if (m_MusicArrayValue > m_MusicTime - EXCELLENT_MIN_MAX && m_MusicArrayValue < m_MusicTime + EXCELLENT_MIN_MAX)
+						{
+							//For each excellent, increase combo by 1
+							m_Combo++;
+							//Increase m_NumExcellents by 1
+							m_NumExcellents++;
+							//Instantiate text alert
+							m_TextResult = m_Excellent.gameObject;
+							InstantiateTextGameObject();
+						}
+						//between certain range = good
+						else if (m_MusicArrayValue > m_MusicTime + EXCELLENT_MIN_MAX && m_MusicArrayValue < m_MusicTime + GOOD_MIN_MAX || m_MusicArrayValue < m_MusicTime - EXCELLENT_MIN_MAX && m_MusicArrayValue > m_MusicTime - GOOD_MIN_MAX)
+						{
+							//Reset combo to 0
+							m_Combo = 0;
+							//Increase m_NumGoods by 1
+							m_NumGoods++;
+							//Instantiate text alert
+							m_TextResult = m_Good.gameObject;
+							InstantiateTextGameObject();
+						}
+						//Otherwise
+						else
+						{
+							//Reset combo to 0
+							m_Combo = 0;
+							//Increase m_NumPoors by 1
+							m_NumPoors++;
+							//Instantiate text alert
+							m_TextResult = m_Poor.gameObject;
+							InstantiateTextGameObject();
+						}
+						m_IsPressed = true;
+					}
+					break;
+				case TouchPhase.Ended:
+				case TouchPhase.Canceled:
+					//need to increment the music time array so that we are checking the next note? 
+					m_MusicArrayPos++;
+					m_IsPressed = false;
+					break;
 			}
 		}
 	}
@@ -123,6 +134,22 @@ public class TouchPanel : MonoBehaviour
 		{
 			m_ComboText.SetActive(false);
 		}
+	}
+
+
+	//TODO How about, there is a check to check how many times you have touched the screen.
+	//This should match the array we are ticking, for instance
+	//array[0] == 1st touch, array[1] == 2nd touch etc etc., but miss 3rd touch - array[2] -> didn't touch
+	//if array [3] == 3rd touch (should be third), 
+	//break combo
+	//increment the touching (so when we do array [4] it will match 5th touch, which is what it should be
+	//reset combo meter
+	public void MissDetected()
+	{
+		//a miss was detected, so increase the m_MusicArrayPos by one
+		m_MusicArrayPos++;
+		//reset combo counter
+		m_Combo = 0;
 	}
 
 	public int GetCombo()
