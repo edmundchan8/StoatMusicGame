@@ -10,9 +10,9 @@ public class TouchPanel : MonoBehaviour
 
 	[Header ("CONST")]
 	[SerializeField]
-	float EXCELLENT_MIN_MAX = 0.15f;
+	float EXCELLENT_MIN_MAX = 0.2f;
 	[SerializeField]
-	float GOOD_MIN_MAX = 0.3f;
+	float GOOD_MIN_MAX = 0.4f;
 
 	[Header ("Text pop ups")]
 	//Hold the gameobjects that we will use to show the text in the game
@@ -36,7 +36,7 @@ public class TouchPanel : MonoBehaviour
 	[SerializeField]
 	MusicManager m_MusicManager;
 	[SerializeField]
-	List<float> m_SongArray;
+	float m_MusicMarker;
 
 	[Header ("Timers")]
 	[SerializeField]
@@ -50,7 +50,7 @@ public class TouchPanel : MonoBehaviour
 
 	void Update () 
 	{
-		m_SongArray = m_MusicManager.GetList();
+		m_MusicMarker = m_MusicManager.m_CurrentKeyPos();
 		m_MusicTime = m_MusicManager.GetCurrentMusicTime();
 		OnCombo();
 		//if we are touching the screen
@@ -64,6 +64,7 @@ public class TouchPanel : MonoBehaviour
 				case TouchPhase.Began:
 					if (!m_IsPressed)
 					{
+						print(m_MusicTime);
 						//TODO It doesn't matter when the player touches the screen to tap to the music.
 						//If the player taps within a certain distance of ANY of the times in the array, indicate the result
 						//We are doing this instead of individual arrays because if you miss one, the code automatically
@@ -75,47 +76,46 @@ public class TouchPanel : MonoBehaviour
 						//DICTIONARY? instead?
 						//if any of the arrays contains a value that is close to our touch time, call something.
 
-
-						foreach (int arrayValue in m_SongArray)
+						//print(dictionary.Key);
+						//between certain range = excellent
+						if (m_MusicMarker > m_MusicTime - EXCELLENT_MIN_MAX && m_MusicMarker < m_MusicTime + EXCELLENT_MIN_MAX)
 						{
-							//between certain range = excellent
-							if (arrayValue > m_MusicTime - EXCELLENT_MIN_MAX && arrayValue < m_MusicTime + EXCELLENT_MIN_MAX)
-							{
-								//For each excellent, increase combo by 1
-								m_Combo++;
-								//Increase m_NumExcellents by 1
-								m_NumExcellents++;
-								//Instantiate text alert
-								m_TextResult = m_Excellent.gameObject;
-								InstantiateTextGameObject();
-							}
-							//between certain range = good
-							else if (arrayValue > m_MusicTime + EXCELLENT_MIN_MAX && arrayValue < m_MusicTime + GOOD_MIN_MAX || arrayValue < m_MusicTime - EXCELLENT_MIN_MAX && arrayValue > m_MusicTime - GOOD_MIN_MAX)
-							{
-								//Reset combo to 0
-								m_Combo = 0;
-								//Increase m_NumGoods by 1
-								m_NumGoods++;
-								//Instantiate text alert
-								m_TextResult = m_Good.gameObject;
-								InstantiateTextGameObject();
-							}
-							//Otherwise
-							else
-							{
-								//TODO - Poor is being called regardless of touch...
-								//lol, foreach goes through ALL arrays
-								print("poor");
-								//Reset combo to 0
-								m_Combo = 0;
-								//Increase m_NumPoors by 1
-								m_NumPoors++;
-								//Instantiate text alert
-								m_TextResult = m_Poor.gameObject;
-								InstantiateTextGameObject();
-							}
+							print(m_MusicTime + "Exc");
+							//For each excellent, increase combo by 1
+							m_Combo++;
+							//Increase m_NumExcellents by 1
+							m_NumExcellents++;
+							//Instantiate text alert
+							m_TextResult = m_Excellent.gameObject;
+							InstantiateTextGameObject();
+							return;
 						}
-							
+						//between certain range = good
+						else if (m_MusicMarker > m_MusicTime + EXCELLENT_MIN_MAX && m_MusicMarker < m_MusicTime + GOOD_MIN_MAX || m_MusicMarker < m_MusicTime - EXCELLENT_MIN_MAX && m_MusicMarker > m_MusicTime - GOOD_MIN_MAX)
+						{
+							print(m_MusicTime + "Goo");
+							//Reset combo to 0
+							m_Combo = 0;
+							//Increase m_NumGoods by 1
+							m_NumGoods++;
+							//Instantiate text alert
+							m_TextResult = m_Good.gameObject;
+							InstantiateTextGameObject();
+							return;
+						}
+						//Otherwise
+						{
+							print(m_MusicTime + "poo");
+							//TODO - Poor is being called regardless of touch...
+							//lol, foreach goes through ALL arrays
+							//Reset combo to 0
+							m_Combo = 0;
+							//Increase m_NumPoors by 1
+							m_NumPoors++;
+							//Instantiate text alert
+							m_TextResult = m_Poor.gameObject;
+							InstantiateTextGameObject();
+						}
 						m_IsPressed = true;
 					}
 					break;
