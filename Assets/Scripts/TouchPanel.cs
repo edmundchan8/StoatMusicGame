@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 public class TouchPanel : MonoBehaviour 
 {
@@ -9,9 +10,9 @@ public class TouchPanel : MonoBehaviour
 
 	[Header ("CONST")]
 	[SerializeField]
-	float EXCELLENT_MIN_MAX = 0.15f;
+	float EXCELLENT_MIN_MAX = 0.2f;
 	[SerializeField]
-	float GOOD_MIN_MAX = 0.3f;
+	float GOOD_MIN_MAX = 0.4f;
 
 	[Header ("Text pop ups")]
 	//Hold the gameobjects that we will use to show the text in the game
@@ -35,13 +36,11 @@ public class TouchPanel : MonoBehaviour
 	[SerializeField]
 	MusicManager m_MusicManager;
 	[SerializeField]
-	float m_MusicArrayValue;
+	float m_MusicMarker;
 
 	[Header ("Timers")]
 	[SerializeField]
 	float m_MusicTime;
-	[SerializeField]
-	int m_MusicArrayPos = 0;
 
 	[Header ("Combo Counters")]
 	int m_NumExcellents = 0;
@@ -51,7 +50,7 @@ public class TouchPanel : MonoBehaviour
 
 	void Update () 
 	{
-		m_MusicArrayValue = m_MusicManager.GetCurrentPlayNotePos(m_MusicArrayPos);
+		m_MusicMarker = m_MusicManager.m_CurrentKeyPos();
 		m_MusicTime = m_MusicManager.GetCurrentMusicTime();
 		OnCombo();
 		//if we are touching the screen
@@ -65,14 +64,23 @@ public class TouchPanel : MonoBehaviour
 				case TouchPhase.Began:
 					if (!m_IsPressed)
 					{
-						//Check musicManager audio time position.  
-						//The current arrayValue, give or take 0.5f seconds away from that is excellent
-						//Give or take more than 0.5f - 0.75f second from that is good
-						//more than 0.75f second from that is bad
+						//TODO It doesn't matter when the player touches the screen to tap to the music.
+						//If the player taps within a certain distance of ANY of the times in the array, indicate the result
+						//We are doing this instead of individual arrays because if you miss one, the code automatically
+						//sets the next timed array as the one you need to hit, which can become inaccurate.
+						//Probably need to use a foreach loop
+						//The current arrayValue, give or take 0.15f seconds away from that is excellent
+						//Give or take more than 0.15f - 0.4f second from that is good
+						//more than 0.4f second from that is poor
+						//DICTIONARY? instead?
+						//if any of the arrays contains a value that is close to our touch time, call something.
 
+						//print(dictionary.Key);
 						//between certain range = excellent
-						if (m_MusicArrayValue > m_MusicTime - EXCELLENT_MIN_MAX && m_MusicArrayValue < m_MusicTime + EXCELLENT_MIN_MAX)
+						if (m_MusicMarker > m_MusicTime - EXCELLENT_MIN_MAX && m_MusicMarker < m_MusicTime + EXCELLENT_MIN_MAX)
 						{
+							print(m_MusicMarker + " MusicMarker");
+							print(m_MusicTime + "Exc");
 							//For each excellent, increase combo by 1
 							m_Combo++;
 							//Increase m_NumExcellents by 1
@@ -80,10 +88,14 @@ public class TouchPanel : MonoBehaviour
 							//Instantiate text alert
 							m_TextResult = m_Excellent.gameObject;
 							InstantiateTextGameObject();
+							return;
 						}
 						//between certain range = good
-						else if (m_MusicArrayValue > m_MusicTime + EXCELLENT_MIN_MAX && m_MusicArrayValue < m_MusicTime + GOOD_MIN_MAX || m_MusicArrayValue < m_MusicTime - EXCELLENT_MIN_MAX && m_MusicArrayValue > m_MusicTime - GOOD_MIN_MAX)
+						else if (m_MusicMarker > (m_MusicTime + EXCELLENT_MIN_MAX) && m_MusicMarker < (m_MusicTime + GOOD_MIN_MAX) || 
+							m_MusicMarker < (m_MusicTime - EXCELLENT_MIN_MAX) && m_MusicMarker > (m_MusicTime - GOOD_MIN_MAX))
 						{
+							print(m_MusicMarker + " MusicMarker");
+							print(m_MusicTime + "Goo");
 							//Reset combo to 0
 							m_Combo = 0;
 							//Increase m_NumGoods by 1
@@ -91,10 +103,14 @@ public class TouchPanel : MonoBehaviour
 							//Instantiate text alert
 							m_TextResult = m_Good.gameObject;
 							InstantiateTextGameObject();
+							return;
 						}
 						//Otherwise
-						else
 						{
+							print(m_MusicMarker + " MusicMarker");
+							print(m_MusicTime + "poo");
+							//TODO - Poor is being called regardless of touch...
+							//lol, foreach goes through ALL arrays
 							//Reset combo to 0
 							m_Combo = 0;
 							//Increase m_NumPoors by 1
@@ -102,15 +118,12 @@ public class TouchPanel : MonoBehaviour
 							//Instantiate text alert
 							m_TextResult = m_Poor.gameObject;
 							InstantiateTextGameObject();
-							m_MusicArrayPos--;
 						}
 						m_IsPressed = true;
 					}
 					break;
 				case TouchPhase.Ended:
 				case TouchPhase.Canceled:
-					//need to increment the music time array so that we are checking the next note? 
-					m_MusicArrayPos++;
 					m_IsPressed = false;
 					break;
 			}
@@ -140,12 +153,12 @@ public class TouchPanel : MonoBehaviour
 	//if you touch a music note, then destroy it 
 	void OnTriggerStay2D(Collider2D other) 
 	{
+		//When the player touches the screen, and the touch has just begun
 		if (Input.GetTouch(0).phase == TouchPhase.Began)
 		{
-			print("touched");
+			//when the other object touched is the music note prefab 
 			if (other.gameObject.tag == "MusicNote")
 			{
-				print(Input.touchCount);
 				Destroy(other.gameObject);
 			}
 		}
@@ -162,10 +175,7 @@ public class TouchPanel : MonoBehaviour
 
 	public void MissDetected()
 	{
-		//a miss was detected, so increase the m_MusicArrayPos by one
-		m_MusicArrayPos++;
 		//reset combo counter
-
 		m_ComboText.SetActive(false);
 		m_Combo = 0;
 	}

@@ -26,14 +26,19 @@ public class MusicManager : MonoBehaviour
 	string[] m_TextLines = new string[] {};
 
 
-	//Array to hold the music note instantiate times
+	//Dictionary to hold the music note instantiate times
 	[SerializeField]
-	List <float> PlayNotePos = new List<float>();
+	public IDictionary<int, float> PlayNotePos = new Dictionary<int, float>();
 	[SerializeField]
 	int NoteArrayToPlay = 0;
 	//Because the instantiate gameobject is further away from where we want the touch the note, instantiate the music note 2.9f early.
 	[SerializeField]
 	float NOTE_INSTANTIATE_OFFSET = 2.9f;
+	//holds the current music value that we should be testing our touches against 
+	[SerializeField]
+	float m_CurrentMusicMarkValue;
+	[SerializeField]
+	int m_KeyPostion = 0;
 
 	[Header ("DEBUG")]
 	[SerializeField]
@@ -51,7 +56,7 @@ public class MusicManager : MonoBehaviour
 		//At the start of the game, put all values from the EASY_LEVEL_01 into the List for PlayNotePos
 		for (int i = 0; i < m_TextLines.Length; i++)
 		{
-			PlayNotePos.Add(float.Parse(m_TextLines[i]));
+			PlayNotePos.Add(i, float.Parse(m_TextLines[i]));
 		}
 	}
 
@@ -78,14 +83,12 @@ public class MusicManager : MonoBehaviour
 
 		if (m_StartMusic)
 		{
-			print("textline " +m_TextLines.Length);
-			/*print("started music");
-			print(System.Math.Round(audioTime,1));*/
 			//n.b. music note takes 2.6f seconds to get to target from instantiate point.
 
 			//note - array value = float, but rounding the audiotime to 1 decimal place makes it a DOUBLE.
 			//CANNOT compare double == float, so below, I have made them both STRING variables
 			//THEN, I compare both strings.
+			//TODO Need to fix this, this is causing mis timing error at 1st note and last two notes
 			if (PlayNotePos.Count <= m_TextLines.Length)
 			{
 				float arrayValue = PlayNotePos[NoteArrayToPlay];
@@ -101,6 +104,15 @@ public class MusicManager : MonoBehaviour
 				}
 			}
 		}
+		//so the music starts playing, I want the game to constantly check where the time is and keep checking this against the current
+		//dictionary array value.  Once the music timer is > than the dictionary array value, I want to increment the dictionary array value
+		//by 1 so that we move the array value to the next value, and keep repeating this process until we reach the end of our dictionary
+		//list.
+		m_CurrentMusicMarkValue = PlayNotePos[m_KeyPostion];
+		if (GetCurrentMusicTime() > m_CurrentMusicMarkValue)
+		{
+			m_KeyPostion++;
+		}
 	}
 
 	public void StartMusic () 
@@ -114,7 +126,6 @@ public class MusicManager : MonoBehaviour
 		m_SpacePressed = false;
 	}
 
-
 	void InstantiateMusicNotes () 
 	{
 		m_StartMusic = false;
@@ -122,13 +133,13 @@ public class MusicManager : MonoBehaviour
 		theNote.transform.SetParent(m_NoteHolderPosition.transform, false);
 	}
 
-	public float GetCurrentPlayNotePos(int arrayValue)
-	{
-		return PlayNotePos[arrayValue];
-	}
-
 	public float GetCurrentMusicTime()
 	{
 		return m_Audiosource.time;
+	}
+
+	public float m_CurrentKeyPos()
+	{
+		return PlayNotePos[m_KeyPostion];
 	}
 }
