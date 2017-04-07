@@ -64,7 +64,6 @@ public class TouchPanel : MonoBehaviour
 				case TouchPhase.Began:
 					if (!m_IsPressed)
 					{
-						print(m_MusicTime);
 						//TODO It doesn't matter when the player touches the screen to tap to the music.
 						//If the player taps within a certain distance of ANY of the times in the array, indicate the result
 						//We are doing this instead of individual arrays because if you miss one, the code automatically
@@ -80,6 +79,7 @@ public class TouchPanel : MonoBehaviour
 						//between certain range = excellent
 						if (m_MusicMarker > m_MusicTime - EXCELLENT_MIN_MAX && m_MusicMarker < m_MusicTime + EXCELLENT_MIN_MAX)
 						{
+							print(m_MusicMarker + " MusicMarker");
 							print(m_MusicTime + "Exc");
 							//For each excellent, increase combo by 1
 							m_Combo++;
@@ -91,8 +91,10 @@ public class TouchPanel : MonoBehaviour
 							return;
 						}
 						//between certain range = good
-						else if (m_MusicMarker > m_MusicTime + EXCELLENT_MIN_MAX && m_MusicMarker < m_MusicTime + GOOD_MIN_MAX || m_MusicMarker < m_MusicTime - EXCELLENT_MIN_MAX && m_MusicMarker > m_MusicTime - GOOD_MIN_MAX)
+						else if (m_MusicMarker > (m_MusicTime + EXCELLENT_MIN_MAX) && m_MusicMarker < (m_MusicTime + GOOD_MIN_MAX) || 
+							m_MusicMarker < (m_MusicTime - EXCELLENT_MIN_MAX) && m_MusicMarker > (m_MusicTime - GOOD_MIN_MAX))
 						{
+							print(m_MusicMarker + " MusicMarker");
 							print(m_MusicTime + "Goo");
 							//Reset combo to 0
 							m_Combo = 0;
@@ -105,6 +107,7 @@ public class TouchPanel : MonoBehaviour
 						}
 						//Otherwise
 						{
+							print(m_MusicMarker + " MusicMarker");
 							print(m_MusicTime + "poo");
 							//TODO - Poor is being called regardless of touch...
 							//lol, foreach goes through ALL arrays
