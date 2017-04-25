@@ -31,18 +31,18 @@ public class MusicManager : MonoBehaviour
 	public IDictionary<int, float> PlayNotePos = new Dictionary<int, float>();
 	[SerializeField]
 	int NoteArrayToPlay = 0;
-	//Because the instantiate gameobject is further away from where we want the touch the note, instantiate the music note 2.9f early.
+	//Because the instantiate gameobject is further away from where we want the touch the note, instantiate the music note 2.6f early.
 	[SerializeField]
-	float NOTE_INSTANTIATE_OFFSET = 2.9f;
+	float NOTE_INSTANTIATE_OFFSET = 2.6f;
 	//holds the current music value that we should be testing our touches against 
 	[SerializeField]
 	float m_CurrentMusicMarkValue;
 	[SerializeField]
-	int m_KeyPostion = 0;
+	int m_KeyPosition = 0;
 
 	[Header ("DEBUG")]
-	[SerializeField]
-	bool m_SpacePressed = false;
+	//[SerializeField]
+	//bool m_SpacePressed = false;
 	[SerializeField]
 	float time;
 
@@ -62,17 +62,21 @@ public class MusicManager : MonoBehaviour
 
 	void Update() 
 	{
-		//Debug purposes only
+		print(GetCurrentMusicTime() + " current Music Time");
+		print(m_CurrentKeyPos() + " current KeyPos");
+
+
+		/*//TODO: Debug purposes only, begins instantiating of music notes
 		if (Input.GetKeyDown(KeyCode.Space) && !m_SpacePressed)
 		{
 			InstantiateMusicNotes();
 			Invoke("ReenableStartMusicAfterTime", 0.5f);
 			m_SpacePressed = true;
-		}
+		}*/
 
-		//DEBUG MODE
+		/*DEBUG MODE
 		//Test firing music note to target
-		/*if (m_SpacePressed)
+		if (m_SpacePressed)
 		{
 			time += Time.deltaTime;
 			print(time.ToString("F1"));
@@ -108,10 +112,10 @@ public class MusicManager : MonoBehaviour
 		//dictionary array value.  Once the music timer is > than the dictionary array value, I want to increment the dictionary array value
 		//by 1 so that we move the array value to the next value, and keep repeating this process until we reach the end of our dictionary
 		//list.
-		m_CurrentMusicMarkValue = PlayNotePos[m_KeyPostion];
+		m_CurrentMusicMarkValue = PlayNotePos[m_KeyPosition];
 		if (GetCurrentMusicTime() > m_CurrentMusicMarkValue)
 		{
-			m_KeyPostion++;
+			m_KeyPosition++;
 		}
 	}
 
@@ -123,7 +127,7 @@ public class MusicManager : MonoBehaviour
 	public void ReenableStartMusicAfterTime () 
 	{
 		StartMusic();
-		m_SpacePressed = false;
+		//m_SpacePressed = false;
 	}
 
 	void InstantiateMusicNotes () 
@@ -140,6 +144,6 @@ public class MusicManager : MonoBehaviour
 
 	public float m_CurrentKeyPos()
 	{
-		return PlayNotePos[m_KeyPostion];
+		return PlayNotePos[m_KeyPosition];
 	}
 }
