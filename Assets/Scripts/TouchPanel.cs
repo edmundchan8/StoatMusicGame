@@ -53,7 +53,57 @@ public class TouchPanel : MonoBehaviour
 		m_MusicMarker = m_MusicManager.m_CurrentKeyPos();
 		m_MusicTime = m_MusicManager.GetCurrentMusicTime();
 		OnCombo();
-		//if we are touching the screen
+
+		//TODO: Code here is to play game with keyboard space bar input only, like debug mode
+		if (Input.GetKeyDown(KeyCode.Space))
+		{
+			//print(dictionary.Key);
+			//between certain range = excellent
+			if (m_MusicMarker > m_MusicTime - EXCELLENT_MIN_MAX && m_MusicMarker < m_MusicTime + EXCELLENT_MIN_MAX)
+			{
+				print(m_MusicMarker + " MusicMarker");
+				print(m_MusicTime + "Exc");
+				//For each excellent, increase combo by 1
+				m_Combo++;
+				//Increase m_NumExcellents by 1
+				m_NumExcellents++;
+				//Instantiate text alert
+				m_TextResult = m_Excellent.gameObject;
+				InstantiateTextGameObject();
+				return;
+			}
+			//between certain range = good
+			else if (m_MusicMarker > (m_MusicTime + EXCELLENT_MIN_MAX) && m_MusicMarker < (m_MusicTime + GOOD_MIN_MAX) || 
+				m_MusicMarker < (m_MusicTime - EXCELLENT_MIN_MAX) && m_MusicMarker > (m_MusicTime - GOOD_MIN_MAX))
+			{
+				print(m_MusicMarker + " MusicMarker");
+				print(m_MusicTime + "Goo");
+				//Reset combo to 0
+				m_Combo = 0;
+				//Increase m_NumGoods by 1
+				m_NumGoods++;
+				//Instantiate text alert
+				m_TextResult = m_Good.gameObject;
+				InstantiateTextGameObject();
+				return;
+			}
+			//Otherwise
+			{
+				print(m_MusicMarker + " MusicMarker");
+				print(m_MusicTime + "poo");
+				//TODO - Poor is being called regardless of touch...
+				//lol, foreach goes through ALL arrays
+				//Reset combo to 0
+				m_Combo = 0;
+				//Increase m_NumPoors by 1
+				m_NumPoors++;
+				//Instantiate text alert
+				m_TextResult = m_Poor.gameObject;
+				InstantiateTextGameObject();
+			}
+		}
+
+		//TODO: code here is for touch input to play with mobile
 		if (Input.touchCount > 0)
 		{
 			//create an instance of the touch input, first touch
