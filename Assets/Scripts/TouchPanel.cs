@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using System.Linq;
 
 public class TouchPanel : MonoBehaviour 
 {
@@ -36,7 +37,7 @@ public class TouchPanel : MonoBehaviour
 	[SerializeField]
 	MusicManager m_MusicManager;
 	[SerializeField]
-	float m_MusicMarker;
+	List<float> m_MusicList;
 
 	[Header ("Timers")]
 	[SerializeField]
@@ -50,18 +51,22 @@ public class TouchPanel : MonoBehaviour
 
 	void Update () 
 	{
-		m_MusicMarker = m_MusicManager.m_CurrentKeyPos();
+
+		m_MusicList = m_MusicManager.GetList();
 		m_MusicTime = m_MusicManager.GetCurrentMusicTime();
+
 		OnCombo();
 
 		//TODO: Code here is to play game with keyboard space bar input only, like debug mode
 		if (Input.GetKeyDown(KeyCode.Space))
 		{
+			GetMusicIndex();
+			/*
 			//print(dictionary.Key);
 			//between certain range = excellent
-			if (m_MusicMarker > m_MusicTime - EXCELLENT_MIN_MAX && m_MusicMarker < m_MusicTime + EXCELLENT_MIN_MAX)
+			if (GetMusicIndex() > m_MusicTime - EXCELLENT_MIN_MAX && GetMusicIndex() < m_MusicTime + EXCELLENT_MIN_MAX)
 			{
-				print(m_MusicMarker + " MusicMarker");
+				print(GetMusicIndex() + " MusicMarker");
 				print(m_MusicTime + "Exc");
 				//For each excellent, increase combo by 1
 				m_Combo++;
@@ -73,10 +78,10 @@ public class TouchPanel : MonoBehaviour
 				return;
 			}
 			//between certain range = good
-			else if (m_MusicMarker > (m_MusicTime + EXCELLENT_MIN_MAX) && m_MusicMarker < (m_MusicTime + GOOD_MIN_MAX) || 
-				m_MusicMarker < (m_MusicTime - EXCELLENT_MIN_MAX) && m_MusicMarker > (m_MusicTime - GOOD_MIN_MAX))
+			else if (GetMusicIndex() > (m_MusicTime + EXCELLENT_MIN_MAX) && GetMusicIndex() < (m_MusicTime + GOOD_MIN_MAX) || 
+				GetMusicIndex() < (m_MusicTime - EXCELLENT_MIN_MAX) && GetMusicIndex() > (m_MusicTime - GOOD_MIN_MAX))
 			{
-				print(m_MusicMarker + " MusicMarker");
+				print(GetMusicIndex() + " MusicMarker");
 				print(m_MusicTime + "Goo");
 				//Reset combo to 0
 				m_Combo = 0;
@@ -89,7 +94,7 @@ public class TouchPanel : MonoBehaviour
 			}
 			//Otherwise
 			{
-				print(m_MusicMarker + " MusicMarker");
+				print(GetMusicIndex() + " MusicMarker");
 				print(m_MusicTime + "poo");
 				//TODO - Poor is being called regardless of touch...
 				//lol, foreach goes through ALL arrays
@@ -101,9 +106,12 @@ public class TouchPanel : MonoBehaviour
 				m_TextResult = m_Poor.gameObject;
 				InstantiateTextGameObject();
 			}
+			*/
 		}
 
 		//TODO: code here is for touch input to play with mobile
+		//Comment out for time being.
+		/*
 		if (Input.touchCount > 0)
 		{
 			//create an instance of the touch input, first touch
@@ -176,8 +184,7 @@ public class TouchPanel : MonoBehaviour
 				case TouchPhase.Canceled:
 					m_IsPressed = false;
 					break;
-			}
-		}
+			} */	
 	}
 
 	void InstantiateTextGameObject () 
@@ -214,7 +221,6 @@ public class TouchPanel : MonoBehaviour
 		}
 	}
 
-
 	//TODO How about, there is a check to check how many times you have touched the screen.
 	//This should match the array we are ticking, for instance
 	//array[0] == 1st touch, array[1] == 2nd touch etc etc., but miss 3rd touch - array[2] -> didn't touch
@@ -234,4 +240,54 @@ public class TouchPanel : MonoBehaviour
 	{
 		return m_Combo;
 	}
+
+	public void GetMusicIndex () 
+	{
+		//make note of time which you touched screen
+		float hitTime = m_MusicTime;
+		//go through list 
+		for (int i = 0; i < m_MusicList.Count; i++)
+		{
+			if (hitTime > m_MusicList[i] - EXCELLENT_MIN_MAX && hitTime < m_MusicList[i] + EXCELLENT_MIN_MAX)
+			{
+				//For each excellent, increase combo by 1
+				m_Combo++;
+				//Increase m_NumExcellents by 1
+				m_NumExcellents++;
+				//Instantiate text alert
+				m_TextResult = m_Excellent.gameObject;
+				InstantiateTextGameObject();
+				return;
+			}
+			else if (hitTime > m_MusicList[i] - GOOD_MIN_MAX && hitTime < m_MusicList[i] + GOOD_MIN_MAX)
+			{
+				//Reset combo to 0
+				m_Combo = 0;
+				//Increase m_NumGoods by 1
+				m_NumGoods++;
+				//Instantiate text alert
+				m_TextResult = m_Good.gameObject;
+				InstantiateTextGameObject();
+				return;
+			}
+
+			else
+			{
+				//once i is the last one in the list
+				if (i == m_MusicList.Count - 1)
+				{
+					//Reset combo to 0
+					m_Combo = 0;
+					//Increase m_NumPoors by 1
+					m_NumPoors++;
+					//Instantiate text alert
+					m_TextResult = m_Poor.gameObject;
+					InstantiateTextGameObject();
+				}
+			}
+		}
+
+
+	}
+
 }
