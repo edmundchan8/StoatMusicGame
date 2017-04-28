@@ -63,11 +63,13 @@ public class TouchPanel : MonoBehaviour
 		m_MusicTime = m_MusicManager.GetCurrentMusicTime();
 
 		OnCombo();
-
 		//TODO: Code here is to play game with keyboard space bar input only, like debug mode
 		if (Input.GetKeyDown(KeyCode.Space))
 		{
-			print(m_MusicTime);
+
+			//for debug purposes, when we hit space, disable the miss detected code
+
+
 			CheckMusicAgainstTiming();
 			/*
 			//print(dictionary.Key);
@@ -205,14 +207,7 @@ public class TouchPanel : MonoBehaviour
 	void OnCombo()
 	{
 		//When we hit 3 on the combo counter, reveal the combo text
-		if (m_Combo >= 3)
-		{
-			m_ComboText.SetActive(true);
-		}
-		else if (m_Combo < 3)
-		{
-			m_ComboText.SetActive(false);
-		}
+		m_ComboText.SetActive(m_Combo>=3);
 	}
 
 	//if you touch a music note, then destroy it 
@@ -255,7 +250,7 @@ public class TouchPanel : MonoBehaviour
 			if (hitTime > m_MusicList[i] - EXCELLENT_MIN_MAX && hitTime < m_MusicList[i] + EXCELLENT_MIN_MAX)
 			{
 				//For each excellent, increase combo by 1
-				m_Combo++;
+				m_Combo ++;
 				//Increase m_NumExcellents by 1
 				m_NumExcellents++;
 				//Instantiate text alert

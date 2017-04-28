@@ -6,6 +6,8 @@ public class Destroyer : MonoBehaviour
 	//access to the touchpanel so that, if we miss a note, we'll let the touch panel know.
 	[SerializeField]
 	TouchPanel m_TouchPanel;
+	[SerializeField]
+	bool m_EnableMissDetection;
 
 	void OnTriggerEnter2D (Collider2D other)
 	{
@@ -16,6 +18,9 @@ public class Destroyer : MonoBehaviour
 		//TODO - because the note was destroyed by the barrier, it means the player didn't touch it.
 		//if the player doesn't touch it, counts as a miss
 		//also increments the array value int he the touch panel.
-		m_TouchPanel.MissDetected();
+		if (m_EnableMissDetection)
+		{
+			m_TouchPanel.MissDetected();
+		}
 	}
 }
