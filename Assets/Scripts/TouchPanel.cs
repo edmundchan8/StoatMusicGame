@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using System.Linq;
 
 public class TouchPanel : MonoBehaviour 
 {
@@ -10,9 +11,9 @@ public class TouchPanel : MonoBehaviour
 
 	[Header ("CONST")]
 	[SerializeField]
-	float EXCELLENT_MIN_MAX = 0.2f;
+	float EXCELLENT_MIN_MAX = 0.3f;
 	[SerializeField]
-	float GOOD_MIN_MAX = 0.4f;
+	float GOOD_MIN_MAX = 0.5f;
 
 	[Header ("Text pop ups")]
 	//Hold the gameobjects that we will use to show the text in the game
@@ -36,7 +37,7 @@ public class TouchPanel : MonoBehaviour
 	[SerializeField]
 	MusicManager m_MusicManager;
 	[SerializeField]
-	float m_MusicMarker;
+	List<float> m_MusicList;
 
 	[Header ("Timers")]
 	[SerializeField]
@@ -48,20 +49,34 @@ public class TouchPanel : MonoBehaviour
 	int m_NumPoors = 0;
 	int m_Combo = 0;
 
+	void Start()
+	{
+		//I will remove items from the music list (list that helps instantiate music notes, so I want to create for this script a new unique list
+		m_MusicList = new List<float>();
+		//copy all the values from the musicmanager list to this list
+		m_MusicList.AddRange(m_MusicManager.GetList());
+		//Later on, everytime we check the timing of our input against the music list, remove the timing from our list here.
+	}
+
 	void Update () 
 	{
-		m_MusicMarker = m_MusicManager.m_CurrentKeyPos();
 		m_MusicTime = m_MusicManager.GetCurrentMusicTime();
-		OnCombo();
 
+		OnCombo();
 		//TODO: Code here is to play game with keyboard space bar input only, like debug mode
 		if (Input.GetKeyDown(KeyCode.Space))
 		{
+
+			//for debug purposes, when we hit space, disable the miss detected code
+
+
+			CheckMusicAgainstTiming();
+			/*
 			//print(dictionary.Key);
 			//between certain range = excellent
-			if (m_MusicMarker > m_MusicTime - EXCELLENT_MIN_MAX && m_MusicMarker < m_MusicTime + EXCELLENT_MIN_MAX)
+			if (CheckMusicAgainstTiming() > m_MusicTime - EXCELLENT_MIN_MAX && CheckMusicAgainstTiming() < m_MusicTime + EXCELLENT_MIN_MAX)
 			{
-				print(m_MusicMarker + " MusicMarker");
+				print(CheckMusicAgainstTiming() + " MusicMarker");
 				print(m_MusicTime + "Exc");
 				//For each excellent, increase combo by 1
 				m_Combo++;
@@ -73,10 +88,10 @@ public class TouchPanel : MonoBehaviour
 				return;
 			}
 			//between certain range = good
-			else if (m_MusicMarker > (m_MusicTime + EXCELLENT_MIN_MAX) && m_MusicMarker < (m_MusicTime + GOOD_MIN_MAX) || 
-				m_MusicMarker < (m_MusicTime - EXCELLENT_MIN_MAX) && m_MusicMarker > (m_MusicTime - GOOD_MIN_MAX))
+			else if (CheckMusicAgainstTiming() > (m_MusicTime + EXCELLENT_MIN_MAX) && CheckMusicAgainstTiming() < (m_MusicTime + GOOD_MIN_MAX) || 
+				CheckMusicAgainstTiming() < (m_MusicTime - EXCELLENT_MIN_MAX) && CheckMusicAgainstTiming() > (m_MusicTime - GOOD_MIN_MAX))
 			{
-				print(m_MusicMarker + " MusicMarker");
+				print(CheckMusicAgainstTiming() + " MusicMarker");
 				print(m_MusicTime + "Goo");
 				//Reset combo to 0
 				m_Combo = 0;
@@ -89,7 +104,7 @@ public class TouchPanel : MonoBehaviour
 			}
 			//Otherwise
 			{
-				print(m_MusicMarker + " MusicMarker");
+				print(CheckMusicAgainstTiming() + " MusicMarker");
 				print(m_MusicTime + "poo");
 				//TODO - Poor is being called regardless of touch...
 				//lol, foreach goes through ALL arrays
@@ -101,9 +116,12 @@ public class TouchPanel : MonoBehaviour
 				m_TextResult = m_Poor.gameObject;
 				InstantiateTextGameObject();
 			}
+			*/
 		}
 
 		//TODO: code here is for touch input to play with mobile
+		//Comment out for time being.
+		/*
 		if (Input.touchCount > 0)
 		{
 			//create an instance of the touch input, first touch
@@ -176,8 +194,7 @@ public class TouchPanel : MonoBehaviour
 				case TouchPhase.Canceled:
 					m_IsPressed = false;
 					break;
-			}
-		}
+			} */	
 	}
 
 	void InstantiateTextGameObject () 
@@ -190,38 +207,26 @@ public class TouchPanel : MonoBehaviour
 	void OnCombo()
 	{
 		//When we hit 3 on the combo counter, reveal the combo text
-		if (m_Combo >= 3)
-		{
-			m_ComboText.SetActive(true);
-		}
-		else if (m_Combo < 3)
-		{
-			m_ComboText.SetActive(false);
-		}
+		m_ComboText.SetActive(m_Combo>=3);
 	}
 
 	//if you touch a music note, then destroy it 
 	void OnTriggerStay2D(Collider2D other) 
 	{
-		//When the player touches the screen, and the touch has just begun
-		if (Input.GetTouch(0).phase == TouchPhase.Began)
+		//Check to make sure we are touching screen
+		if (Input.touchCount > 0)
 		{
-			//when the other object touched is the music note prefab 
-			if (other.gameObject.tag == "MusicNote")
+			//When the player touches the screen, and the touch has just begun
+			if (Input.GetTouch(0).phase == TouchPhase.Began)
 			{
-				Destroy(other.gameObject);
+				//when the other object touched is the music note prefab 
+				if (other.gameObject.tag == "MusicNote")
+				{
+					Destroy(other.gameObject);
+				}
 			}
 		}
 	}
-
-
-	//TODO How about, there is a check to check how many times you have touched the screen.
-	//This should match the array we are ticking, for instance
-	//array[0] == 1st touch, array[1] == 2nd touch etc etc., but miss 3rd touch - array[2] -> didn't touch
-	//if array [3] == 3rd touch (should be third), 
-	//break combo
-	//increment the touching (so when we do array [4] it will match 5th touch, which is what it should be
-	//reset combo meter
 
 	public void MissDetected()
 	{
@@ -234,4 +239,59 @@ public class TouchPanel : MonoBehaviour
 	{
 		return m_Combo;
 	}
+
+	public void CheckMusicAgainstTiming () 
+	{
+		//make note of time which you touched screen
+		float hitTime = m_MusicTime;
+		//go through list 
+		for (int i = 0; i < m_MusicList.Count; i++)
+		{
+			if (hitTime > m_MusicList[i] - EXCELLENT_MIN_MAX && hitTime < m_MusicList[i] + EXCELLENT_MIN_MAX)
+			{
+				//For each excellent, increase combo by 1
+				m_Combo ++;
+				//Increase m_NumExcellents by 1
+				m_NumExcellents++;
+				//Instantiate text alert
+				m_TextResult = m_Excellent.gameObject;
+				InstantiateTextGameObject();
+				//Remove the timing that we checked just now from the list
+				//There was an error before where, if the timings were too close together (2.5f, 2.7f, 2.9f), the timing wouldn't know which to test against.
+				//By removing a timing from the list, the code won't retest a timing we have tried before.
+				m_MusicList.Remove(m_MusicList[i]);
+				return;
+			}
+			else if (hitTime > m_MusicList[i] - GOOD_MIN_MAX && hitTime < m_MusicList[i] + GOOD_MIN_MAX)
+			{
+				//Reset combo to 0
+				m_Combo = 0;
+				//Increase m_NumGoods by 1
+				m_NumGoods++;
+				//Instantiate text alert
+				m_TextResult = m_Good.gameObject;
+				InstantiateTextGameObject();
+				m_MusicList.Remove(m_MusicList[i]);
+				return;
+			}
+
+			else
+			{
+				//once i is the last one in the list
+				if (i == m_MusicList.Count - 1)
+				{
+					//Reset combo to 0
+					m_Combo = 0;
+					//Increase m_NumPoors by 1
+					m_NumPoors++;
+					//Instantiate text alert
+					m_TextResult = m_Poor.gameObject;
+					InstantiateTextGameObject();
+				}
+			}
+		}
+
+
+	}
+
 }

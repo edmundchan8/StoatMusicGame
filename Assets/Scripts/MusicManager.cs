@@ -5,14 +5,11 @@ using System.Collections.Generic;
 public class MusicManager : MonoBehaviour 
 {
 	[SerializeField]
-	AudioSource m_Audiosource;
-
-	[SerializeField]
-	bool m_StartMusic = false;
+	bool m_CanInstantiateNote = false;
 
 	//Position where the notes to touch are generated
 	[SerializeField]
-	GameObject m_NoteHolderPosition;
+	GameObject m_NoteInstantiatePosition;
 
 	//The note prefab to instantiate
 	[SerializeField]
@@ -23,118 +20,71 @@ public class MusicManager : MonoBehaviour
 	[SerializeField]
 	TextAsset EASY_LEVEL_01;
 	[SerializeField]
-	string[] m_TextLines = new string[] {};
-
-
-	//Dictionary to hold the music note instantiate times
+	string[] m_MusicTimeText = new string[] {};
 	[SerializeField]
-	public IDictionary<int, float> PlayNotePos = new Dictionary<int, float>();
+	AudioSource m_Audiosource;
+
+	//List to hold the music note instantiate times
 	[SerializeField]
-	int NoteArrayToPlay = 0;
+	public List<float> m_MusicPlayTimeList = new List<float>();
+	[SerializeField]
+	int m_NoteIndexToPlay = 0;
 	//Because the instantiate gameobject is further away from where we want the touch the note, instantiate the music note 2.6f early.
 	[SerializeField]
 	float NOTE_INSTANTIATE_OFFSET = 2.6f;
-	//holds the current music value that we should be testing our touches against 
-	[SerializeField]
-	float m_CurrentMusicMarkValue;
-	[SerializeField]
-	int m_KeyPosition = 0;
 
-	[Header ("DEBUG")]
-	//[SerializeField]
-	//bool m_SpacePressed = false;
 	[SerializeField]
-	float time;
+	float DELAY_INSTANTIATE_DURATION = 0.3f;
 
 	void Awake()
 	{//TODO: Switch statement later.  Depending on the level, set the LEVEL_TEXT To use 
-		m_TextLines = EASY_LEVEL_01.text.Split('\n');
+		m_MusicTimeText = EASY_LEVEL_01.text.Split('\n');
 	}
 
 	void Start()
 	{
-		//At the start of the game, put all values from the EASY_LEVEL_01 into the List for PlayNotePos
-		for (int i = 0; i < m_TextLines.Length; i++)
+		//At the start of the game, put all values from the EASY_LEVEL_01 into the List for m_MusicPlayTimeList
+		for (int i = 0; i < m_MusicTimeText.Length; i++)
 		{
-			PlayNotePos.Add(i, float.Parse(m_TextLines[i]));
+			m_MusicPlayTimeList.Add(float.Parse(m_MusicTimeText[i]));
 		}
 	}
 
 	void Update() 
 	{
-		print(GetCurrentMusicTime() + " current Music Time");
-		print(m_CurrentKeyPos() + " current KeyPos");
-
-
-		/*//TODO: Debug purposes only, begins instantiating of music notes
-		if (Input.GetKeyDown(KeyCode.Space) && !m_SpacePressed)
-		{
-			InstantiateMusicNotes();
-			Invoke("ReenableStartMusicAfterTime", 0.5f);
-			m_SpacePressed = true;
-		}*/
-
-		/*DEBUG MODE
-		//Test firing music note to target
-		if (m_SpacePressed)
-		{
-			time += Time.deltaTime;
-			print(time.ToString("F1"));
-		}
-		*/
-
 		float audioTime = m_Audiosource.time;
 
-		if (m_StartMusic)
+		if (m_CanInstantiateNote)
 		{
 			//n.b. music note takes 2.6f seconds to get to target from instantiate point.
-
-			//note - array value = float, but rounding the audiotime to 1 decimal place makes it a DOUBLE.
-			//CANNOT compare double == float, so below, I have made them both STRING variables
-			//THEN, I compare both strings.
-			//TODO Need to fix this, this is causing mis timing error at 1st note and last two notes
-			if (PlayNotePos.Count <= m_TextLines.Length)
+			if (m_NoteIndexToPlay < m_MusicTimeText.Length)
 			{
-				float arrayValue = PlayNotePos[NoteArrayToPlay];
-				string newFloatValue = (arrayValue - NOTE_INSTANTIATE_OFFSET).ToString("F2");
-				string newAudioTime = System.Math.Round(audioTime, 1).ToString("F2");
+				//take current music time to check against from the music list, minus instantiate offset time, convert to 2 decimal places
+				string InstantiateMusicNoteTime = (m_MusicPlayTimeList[m_NoteIndexToPlay] - NOTE_INSTANTIATE_OFFSET).ToString("F2");
+				//round the current audio time to 1 decimal places, then output to 2 decimal places
+				string RoundedCurrentAudioTime = System.Math.Round(audioTime, 1).ToString("F2");
 
-				//Comparing both STRINGS
-				if (newAudioTime == newFloatValue) //&& NoteArrayToPlay <= PlayNotePos.Length)
+				//Comparing both STRINGS from above
+				if (RoundedCurrentAudioTime == InstantiateMusicNoteTime)
 				{
+					m_NoteIndexToPlay++;
 					InstantiateMusicNotes();
-					Invoke("ReenableStartMusicAfterTime", 0.5f);
-					NoteArrayToPlay++;
+					Invoke("SetCanInstantiateTrue", DELAY_INSTANTIATE_DURATION);
 				}
 			}
 		}
-		//so the music starts playing, I want the game to constantly check where the time is and keep checking this against the current
-		//dictionary array value.  Once the music timer is > than the dictionary array value, I want to increment the dictionary array value
-		//by 1 so that we move the array value to the next value, and keep repeating this process until we reach the end of our dictionary
-		//list.
-		m_CurrentMusicMarkValue = PlayNotePos[m_KeyPosition];
-		if (GetCurrentMusicTime() > m_CurrentMusicMarkValue)
-		{
-			m_KeyPosition++;
-		}
 	}
 
-	public void StartMusic () 
+	public void SetCanInstantiateTrue () 
 	{
-		m_StartMusic = true;
-	}
-
-	public void ReenableStartMusicAfterTime () 
-	{
-		StartMusic();
-		//m_SpacePressed = false;
+		m_CanInstantiateNote = true;
 	}
 
 	void InstantiateMusicNotes () 
 	{
-		m_StartMusic = false;
-		GameObject theNote = Instantiate(m_Notes, m_NoteHolderPosition.transform.position, transform.rotation) as GameObject;
-		theNote.transform.SetParent(m_NoteHolderPosition.transform, false);
+		m_CanInstantiateNote = false;
+		GameObject theNote = Instantiate(m_Notes, m_NoteInstantiatePosition.transform.position, transform.rotation) as GameObject;
+		theNote.transform.SetParent(m_NoteInstantiatePosition.transform, false);
 	}
 
 	public float GetCurrentMusicTime()
@@ -142,8 +92,8 @@ public class MusicManager : MonoBehaviour
 		return m_Audiosource.time;
 	}
 
-	public float m_CurrentKeyPos()
+	public List<float> GetList()
 	{
-		return PlayNotePos[m_KeyPosition];
+		return m_MusicPlayTimeList;
 	}
 }

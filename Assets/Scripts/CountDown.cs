@@ -29,7 +29,7 @@ public class CountDown : MonoBehaviour
 			m_GameTimer.StartTimer();
 			//Start music
 			m_AudioSource.Play();
-			m_MusicManager.StartMusic();
+			m_MusicManager.SetCanInstantiateTrue();
 			Destroy(this.gameObject);
 		}
 	}
