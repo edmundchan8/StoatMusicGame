@@ -2,14 +2,13 @@
 using System.Collections;
 using UnityEngine.UI;
 using System.Collections.Generic;
-using System.Linq;
 
 public class TouchPanel : MonoBehaviour 
 {
 	//bool to control if we can detect we are pressing a key
 	bool m_IsPressed = false;
 
-	[Header ("CONST")]
+	[Header("Constants")]
 	[SerializeField]
 	float EXCELLENT_MIN_MAX = 0.1f;
 	[SerializeField]
@@ -38,6 +37,12 @@ public class TouchPanel : MonoBehaviour
 	MusicManager m_MusicManager;
 	[SerializeField]
 	List<float> m_MusicList;
+	[SerializeField]
+	Text m_ExcellentScore;
+	[SerializeField]
+	Text m_GoodScore;
+	[SerializeField]
+	Text m_PoorScore;
 
 	[Header ("Timers")]
 	[SerializeField]
@@ -56,6 +61,7 @@ public class TouchPanel : MonoBehaviour
 		//copy all the values from the musicmanager list to this list
 		m_MusicList.AddRange(m_MusicManager.GetList());
 		//Later on, everytime we check the timing of our input against the music list, remove the timing from our list here.
+		UpdateScoreText();
 	}
 
 	void Update () 
@@ -240,7 +246,7 @@ public class TouchPanel : MonoBehaviour
 		return m_Combo;
 	}
 
-	public void CheckMusicAgainstTiming () 
+	void CheckMusicAgainstTiming () 
 	{
 		//make note of time which you touched screen
 		float hitTime = m_MusicTime;
@@ -249,11 +255,9 @@ public class TouchPanel : MonoBehaviour
 		{
 			if (hitTime > m_MusicList[i] - EXCELLENT_MIN_MAX && hitTime < m_MusicList[i] + EXCELLENT_MIN_MAX)
 			{
-				//For each excellent, increase combo by 1
 				m_Combo ++;
-				//Increase m_NumExcellents by 1
 				m_NumExcellents++;
-				//Instantiate text alert
+				UpdateScoreText();
 				m_TextResult = m_Excellent.gameObject;
 				InstantiateTextGameObject();
 				//Remove the timing that we checked just now from the list
@@ -264,11 +268,9 @@ public class TouchPanel : MonoBehaviour
 			}
 			else if (hitTime > m_MusicList[i] - GOOD_MIN_MAX && hitTime < m_MusicList[i] + GOOD_MIN_MAX)
 			{
-				//Reset combo to 0
 				m_Combo = 0;
-				//Increase m_NumGoods by 1
 				m_NumGoods++;
-				//Instantiate text alert
+				UpdateScoreText();
 				m_TextResult = m_Good.gameObject;
 				InstantiateTextGameObject();
 				m_MusicList.Remove(m_MusicList[i]);
@@ -280,18 +282,20 @@ public class TouchPanel : MonoBehaviour
 				//once i is the last one in the list
 				if (i == m_MusicList.Count - 1)
 				{
-					//Reset combo to 0
 					m_Combo = 0;
-					//Increase m_NumPoors by 1
 					m_NumPoors++;
-					//Instantiate text alert
+					UpdateScoreText();
 					m_TextResult = m_Poor.gameObject;
 					InstantiateTextGameObject();
 				}
 			}
 		}
-
-
 	}
 
+	void UpdateScoreText()
+	{
+		m_ExcellentScore.text = "Excellent: " + m_NumExcellents;
+		m_GoodScore.text = "Good: " + m_NumGoods;
+		m_PoorScore.text = "Poor " + m_NumPoors;
+	}
 }
