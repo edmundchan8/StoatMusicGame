@@ -38,6 +38,10 @@ public class TouchPanel : MonoBehaviour
 	[SerializeField]
 	List<float> m_MusicList;
 	[SerializeField]
+	GameObject m_ScoreObject;
+	[SerializeField]
+	ScoreScript m_ScoreScript;
+	[SerializeField]
 	Text m_ExcellentScore;
 	[SerializeField]
 	Text m_GoodScore;
@@ -56,6 +60,7 @@ public class TouchPanel : MonoBehaviour
 
 	void Start()
 	{
+		m_ScoreScript = m_ScoreObject.GetComponent<ScoreScript>();
 		//I will remove items from the music list (list that helps instantiate music notes, so I want to create for this script a new unique list
 		m_MusicList = new List<float>();
 		//copy all the values from the musicmanager list to this list
@@ -257,6 +262,7 @@ public class TouchPanel : MonoBehaviour
 			{
 				m_Combo ++;
 				m_NumExcellents++;
+				m_ScoreScript.IncreaseScore(100);
 				UpdateScoreText();
 				m_TextResult = m_Excellent.gameObject;
 				InstantiateTextGameObject();
@@ -269,7 +275,8 @@ public class TouchPanel : MonoBehaviour
 			else if (hitTime > m_MusicList[i] - GOOD_MIN_MAX && hitTime < m_MusicList[i] + GOOD_MIN_MAX)
 			{
 				m_Combo = 0;
-				m_NumGoods++;
+				m_NumGoods++;				
+				m_ScoreScript.IncreaseScore(10);
 				UpdateScoreText();
 				m_TextResult = m_Good.gameObject;
 				InstantiateTextGameObject();
