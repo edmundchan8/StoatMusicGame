@@ -34,6 +34,8 @@ public class TouchPanel : MonoBehaviour
 	[SerializeField]
 	GameObject m_ComboText;
 	[SerializeField]
+	ComboScript m_ComboScript;
+	[SerializeField]
 	MusicManager m_MusicManager;
 	[SerializeField]
 	List<float> m_MusicList;
@@ -48,14 +50,17 @@ public class TouchPanel : MonoBehaviour
 	[SerializeField]
 	float m_MusicTime;
 
-	[Header ("Combo Counters")]
+
+	//TODO remove 
+	[Header ("Counters")]
 	int m_NumExcellents = 0;
 	int m_NumGoods = 0;
 	int m_NumPoors = 0;
-	int m_Combo = 0;
 
 	void Start()
 	{
+		m_ComboScript = m_ComboText.GetComponent<ComboScript>();
+
 		//I will remove items from the music list (list that helps instantiate music notes, so I want to create for this script a new unique list
 		m_MusicList = new List<float>();
 		//copy all the values from the musicmanager list to this list
@@ -68,7 +73,6 @@ public class TouchPanel : MonoBehaviour
 	{
 		m_MusicTime = m_MusicManager.GetCurrentMusicTime();
 
-		OnCombo();
 		//TODO: Code here is to play game with keyboard space bar input only, like debug mode
 		if (Input.GetKeyDown(KeyCode.Space))
 		{
@@ -210,12 +214,6 @@ public class TouchPanel : MonoBehaviour
 		theTextObject.transform.SetParent(m_TextPosition.transform, false);
 	}
 
-	void OnCombo()
-	{
-		//When we hit 3 on the combo counter, reveal the combo text
-		m_ComboText.SetActive(m_Combo>=3);
-	}
-
 	//if you touch a music note, then destroy it 
 	void OnTriggerStay2D(Collider2D other) 
 	{
@@ -236,14 +234,7 @@ public class TouchPanel : MonoBehaviour
 
 	public void MissDetected()
 	{
-		//reset combo counter
-		m_ComboText.SetActive(false);
-		m_Combo = 0;
-	}
-
-	public int GetCombo()
-	{
-		return m_Combo;
+		m_ComboScript.ResetCombo();
 	}
 
 	void CheckMusicAgainstTiming () 
@@ -255,7 +246,7 @@ public class TouchPanel : MonoBehaviour
 		{
 			if (hitTime > m_MusicList[i] - EXCELLENT_MIN_MAX && hitTime < m_MusicList[i] + EXCELLENT_MIN_MAX)
 			{
-				m_Combo ++;
+				m_ComboScript.IncreaseCombo(1);
 				m_NumExcellents++;
 				UpdateScoreText();
 				m_TextResult = m_Excellent.gameObject;
@@ -268,7 +259,7 @@ public class TouchPanel : MonoBehaviour
 			}
 			else if (hitTime > m_MusicList[i] - GOOD_MIN_MAX && hitTime < m_MusicList[i] + GOOD_MIN_MAX)
 			{
-				m_Combo = 0;
+				m_ComboScript.IncreaseCombo(1);
 				m_NumGoods++;
 				UpdateScoreText();
 				m_TextResult = m_Good.gameObject;
@@ -282,7 +273,7 @@ public class TouchPanel : MonoBehaviour
 				//once i is the last one in the list
 				if (i == m_MusicList.Count - 1)
 				{
-					m_Combo = 0;
+					MissDetected();
 					m_NumPoors++;
 					UpdateScoreText();
 					m_TextResult = m_Poor.gameObject;
