@@ -5,8 +5,6 @@ using UnityEngine.UI;
 public class Timer : MonoBehaviour {
 
 	[SerializeField]
-	Text m_Text;
-	[SerializeField]
 	float m_Timer;
 	[SerializeField]
 	bool m_CanTick = false;
@@ -21,7 +19,6 @@ public class Timer : MonoBehaviour {
 		if (m_CanTick)
 		{
 			m_Timer += Time.deltaTime;
-			m_Text.text = "Time: " + m_Timer.ToString("F2");
 		}
 	}
 }

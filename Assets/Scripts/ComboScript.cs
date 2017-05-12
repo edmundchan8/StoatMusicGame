@@ -8,8 +8,11 @@ public class ComboScript : MonoBehaviour
 	[SerializeField]
 	TouchPanel m_TouchPanel;
 	[SerializeField]
-	Text m_Text;
-
+	Text m_ComboCounterText;
+	[SerializeField]
+	Text m_HighestComboText;
+	[SerializeField]
+	int m_HighestComboValue;
 	void Start()
 	{
 		gameObject.SetActive(false);
@@ -17,6 +20,8 @@ public class ComboScript : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
 	{
-		m_Text.text = m_TouchPanel.GetCombo() + " hit combo!";
+		m_ComboCounterText.text = m_TouchPanel.GetCombo() + " hit combo!";
+		m_HighestComboText.text = "Highest Combo: " + Mathf.Max(m_TouchPanel.GetCombo(), m_HighestComboValue);
 	}
+
 }

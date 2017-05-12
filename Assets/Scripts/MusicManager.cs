@@ -34,7 +34,7 @@ public class MusicManager : MonoBehaviour
 	float NOTE_INSTANTIATE_OFFSET = 2.6f;
 
 	[SerializeField]
-	float DELAY_INSTANTIATE_DURATION = 0.3f;
+	float DELAY_INSTANTIATE_DURATION = 0.2f;
 
 	void Awake()
 	{//TODO: Switch statement later.  Depending on the level, set the LEVEL_TEXT To use 
