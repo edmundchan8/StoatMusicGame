@@ -13,15 +13,32 @@ public class ComboScript : MonoBehaviour
 	Text m_HighestComboText;
 	[SerializeField]
 	int m_HighestComboValue;
-	void Start()
-	{
-		gameObject.SetActive(false);
-	}
+
+	[Header ("Combo Counters")]
+	int m_Combo = 0;
+
 	// Update is called once per frame
 	void Update () 
 	{
-		m_ComboCounterText.text = m_TouchPanel.GetCombo() + " hit combo!";
-		m_HighestComboText.text = "Highest Combo: " + Mathf.Max(m_TouchPanel.GetCombo(), m_HighestComboValue);
+		m_ComboCounterText.GetComponent<Text>().enabled = IsComboGreaterTwo();
+		 
+		m_ComboCounterText.text = m_Combo + " hit combo!";
+		m_HighestComboValue = Mathf.Max(m_Combo, m_HighestComboValue);
+		m_HighestComboText.text = "Highest Combo: " + m_HighestComboValue;
 	}
 
+	public bool IsComboGreaterTwo()
+	{
+		return (m_Combo > 2);
+	}
+
+	public void ResetCombo()
+	{
+		m_Combo = 0;
+	}
+
+	public void IncreaseCombo(int amount)
+	{
+		m_Combo += amount;
+	}
 }
