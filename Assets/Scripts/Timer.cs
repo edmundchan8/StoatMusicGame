@@ -1,24 +1,37 @@
 ﻿using UnityEngine;
 using System.Collections;
-using UnityEngine.UI;
+[System.Serializable]
 
-public class Timer : MonoBehaviour {
-
+public class Timer 
+{
 	[SerializeField]
-	float m_Timer;
-	[SerializeField]
-	bool m_CanTick = false;
+	float m_Timer = 0f;
 
-	public void StartTimer()
+	public void SetTimer(float time)
 	{
-		m_CanTick = true;
+		m_Timer = time;
 	}
 
-	void Update () 
+	public bool Update (float tick)
 	{
-		if (m_CanTick)
+		if (m_Timer > 0.0f)
 		{
-			m_Timer += Time.deltaTime;
+			m_Timer = Mathf.Max(m_Timer - tick, 0f);
+			if (m_Timer > 0.0f)
+			{
+				return true;
+			}
 		}
+		return false;
+	}
+
+	public float GetTimer()
+	{
+		return m_Timer;
+	}
+
+	public bool HasCompleted()
+	{
+		return m_Timer <= 0.0f;	
 	}
 }

@@ -43,12 +43,13 @@ public class TouchPanel : MonoBehaviour
 	GameObject m_ScoreObject;
 	[SerializeField]
 	ScoreScript m_ScoreScript;
+	RabbitScript m_RabbitScript;
 
 	[Header ("GitHub code - Remove later?")]
 	[SerializeField]
-	GameObject m_Rabbit;
+	GameObject m_Stoat;
 	[SerializeField]
-	RabbitScript m_RabbitScript;
+	StoatScript m_StoatScript;
 
 	[SerializeField]
 	Text m_ExcellentScore;
@@ -72,7 +73,9 @@ public class TouchPanel : MonoBehaviour
 	{
 		m_ComboScript = m_ComboText.GetComponent<ComboScript>();
 		m_ScoreScript = m_ScoreObject.GetComponent<ScoreScript>();
-		m_RabbitScript = m_Rabbit.GetComponent<RabbitScript>();
+		m_Stoat = GameObject.Find("Stoat");
+		m_StoatScript = m_Stoat.GetComponent<StoatScript>();
+		m_RabbitScript = GameObject.Find("Rabbit").GetComponent<RabbitScript>();
 		//I will remove items from the music list (list that helps instantiate music notes, so I want to create for this script a new unique list
 		m_MusicList = new List<float>();
 		//copy all the values from the musicmanager list to this list
@@ -89,7 +92,7 @@ public class TouchPanel : MonoBehaviour
 
 		if (Input.GetKeyDown(KeyCode.R))
 		{
-			m_RabbitScript.RunAway();
+			m_StoatScript.SetLerpPositions();
 		}
 
 		//TODO: Code here is to play game with keyboard space bar input only, like debug mode

@@ -12,7 +12,7 @@ public class StoatScript : MonoBehaviour
 	[SerializeField]
 	Vector2 m_EndPos;
 	[SerializeField]
-	float m_CurrentTime;
+	Timer m_Timer;
 
 	[Header ("Accessor")]
 	[SerializeField]
@@ -36,7 +36,7 @@ public class StoatScript : MonoBehaviour
 
 	void Update()
 	{
-		m_CurrentTime += Time.deltaTime;
+		m_Timer.Update(Time.deltaTime);
 		MoveCloserRabbit();
 		if (m_ArrayCounter < 2)
 		{
@@ -50,13 +50,14 @@ public class StoatScript : MonoBehaviour
 
 	public void MoveCloserRabbit() 
 	{
-		transform.position = Vector2.Lerp(m_StartPos, m_EndPos, m_CurrentTime / m_MoveDuration);
+		print((m_MoveDuration - m_Timer.GetTimer()) / m_MoveDuration);
+		transform.position = Vector2.Lerp(m_StartPos, m_EndPos, (m_MoveDuration - m_Timer.GetTimer()) / m_MoveDuration);
 	}
 
 	public void SetLerpPositions()
 	{
 		m_StartPos = transform.position;
 		m_EndPos = new Vector2(transform.position.x + m_MoveAmount, transform.position.y);
-		m_CurrentTime = 0;
+		m_Timer.SetTimer(m_MoveDuration);
 	}
 }
