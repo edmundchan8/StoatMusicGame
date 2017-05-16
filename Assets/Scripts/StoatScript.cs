@@ -50,7 +50,6 @@ public class StoatScript : MonoBehaviour
 
 	public void MoveCloserRabbit() 
 	{
-		print((m_MoveDuration - m_Timer.GetTimer()) / m_MoveDuration);
 		transform.position = Vector2.Lerp(m_StartPos, m_EndPos, (m_MoveDuration - m_Timer.GetTimer()) / m_MoveDuration);
 	}
 
