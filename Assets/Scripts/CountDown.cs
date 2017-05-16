@@ -8,8 +8,6 @@ public class CountDown : MonoBehaviour
 	[SerializeField]
 	Text m_Text;
 	[SerializeField]
-	Timer m_GameTimer;
-	[SerializeField]
 	AudioSource m_AudioSource;
 	[SerializeField]
 	MusicManager m_MusicManager;
@@ -25,8 +23,6 @@ public class CountDown : MonoBehaviour
 		m_Text.text = m_Timer.ToString("#");
 		if (m_Timer <= 0)
 		{
-			//Start game timer
-			m_GameTimer.StartTimer();
 			//Start music
 			m_AudioSource.Play();
 			m_MusicManager.SetCanInstantiateTrue();
