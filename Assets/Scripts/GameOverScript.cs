@@ -9,6 +9,8 @@ public class GameOverScript : MonoBehaviour
 
 	[SerializeField]
 	float FADE_IN_DURATION = 2f;
+	[SerializeField]
+	float FLOAT_DOWN_DURATION = 0.01f;
 
 	[SerializeField]
 	Text m_LoseText;
@@ -38,7 +40,10 @@ public class GameOverScript : MonoBehaviour
 		if (m_TextColor.a != 1f)
 		{
 			gameObject.SetActive(true);
+			Vector2 loseTextObj = transform.position;
 			m_TextColor.a = ((FADE_IN_DURATION - m_Timer.GetTimer()) / FADE_IN_DURATION);
+			loseTextObj.y -= FLOAT_DOWN_DURATION;
+			transform.position = loseTextObj;
 			m_LoseText.color = m_TextColor;
 		}
 	}
