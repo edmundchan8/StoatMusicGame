@@ -36,6 +36,9 @@ public class MusicManager : MonoBehaviour
 	[SerializeField]
 	float DELAY_INSTANTIATE_DURATION = 0.2f;
 
+	[SerializeField]
+	float FADE_VOLUME_AMOUNT = 0.02f;
+
 	void Awake()
 	{//TODO: Switch statement later.  Depending on the level, set the LEVEL_TEXT To use 
 		m_MusicTimeText = EASY_LEVEL_01.text.Split('\n');
@@ -95,5 +98,13 @@ public class MusicManager : MonoBehaviour
 	public List<float> GetList()
 	{
 		return m_MusicPlayTimeList;
+	}
+
+	public void FadeOutMusic()
+	{
+		if (m_Audiosource.volume > 0)
+		{
+			m_Audiosource.volume -= FADE_VOLUME_AMOUNT;
+		}
 	}
 }
