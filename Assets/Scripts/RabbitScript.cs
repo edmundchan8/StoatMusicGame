@@ -5,8 +5,8 @@ public class RabbitScript : MonoBehaviour
 {
 	[SerializeField]
 	float SPEED = 2;
-	[SerializeField]
-	float DEATH_DURATION = 4f;
+	/*[SerializeField]
+	float DEATH_DURATION = 4f; */
 
 	[Header("Accessor")]
 	[SerializeField]
@@ -31,12 +31,14 @@ public class RabbitScript : MonoBehaviour
 	public void RunAway()
 	{
 		m_BeginRun = !m_BeginRun;
-		DestroyAfterTime();
+		//DestroyAfterTime();
 		m_GameOverScript.SetLoseTextActive();
 	}
 
-	public void DestroyAfterTime()
+	//Consider if we still want this as it causes some conflicts/null reference exceptions later on once destroyed
+	/*public void DestroyAfterTime()
 	{
 		Destroy(gameObject, DEATH_DURATION);
 	}
+	*/
 }
