@@ -23,6 +23,8 @@ public class MusicManager : MonoBehaviour
 	string[] m_MusicTimeText = new string[] {};
 	[SerializeField]
 	AudioSource m_Audiosource;
+	[SerializeField]
+	GameObject m_GameOverText;
 
 	//List to hold the music note instantiate times
 	[SerializeField]
@@ -40,12 +42,17 @@ public class MusicManager : MonoBehaviour
 	float FADE_VOLUME_AMOUNT = 0.02f;
 
 	void Awake()
-	{//TODO: Switch statement later.  Depending on the level, set the LEVEL_TEXT To use 
+	{	//TODO: Switch statement later.  Depending on the level, set the LEVEL_TEXT To use 
 		m_MusicTimeText = EASY_LEVEL_01.text.Split('\n');
 	}
 
 	void Start()
 	{
+		m_GameOverText = GameObject.FindObjectOfType<GameOverScript>().gameObject;
+		if (m_GameOverText == null)
+		{
+			return;
+		}
 		//At the start of the game, put all values from the EASY_LEVEL_01 into the List for m_MusicPlayTimeList
 		for (int i = 0; i < m_MusicTimeText.Length; i++)
 		{
@@ -57,7 +64,7 @@ public class MusicManager : MonoBehaviour
 	{
 		float audioTime = m_Audiosource.time;
 
-		if (m_CanInstantiateNote)
+		if (m_CanInstantiateNote && !IsGameOver())
 		{
 			//n.b. music note takes 2.6f seconds to get to target from instantiate point.
 			if (m_NoteIndexToPlay < m_MusicTimeText.Length)
@@ -106,5 +113,10 @@ public class MusicManager : MonoBehaviour
 		{
 			m_Audiosource.volume -= FADE_VOLUME_AMOUNT;
 		}
+	}
+
+	public bool IsGameOver()
+	{ 
+		return m_GameOverText.activeInHierarchy;
 	}
 }
