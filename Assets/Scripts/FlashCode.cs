@@ -12,7 +12,7 @@ public class FlashCode : MonoBehaviour
 	float TIME_TO_FLASH_DURATION = 0.5f;
 
 	[SerializeField]
-	SpriteRenderer m_SpriteRenderer;
+	SpriteRenderer[] m_SpriteRendererArray;
 	[SerializeField]
 	bool m_CanFlash = false;
 	[SerializeField]
@@ -22,11 +22,16 @@ public class FlashCode : MonoBehaviour
 
 	void Start()
 	{
-		m_SpriteRenderer = GetComponent<SpriteRenderer>();
+		m_SpriteRendererArray = transform.GetComponentsInChildren<SpriteRenderer>();
 	}
 
 	void Update ()
 	{
+		if (Input.GetKey(KeyCode.T))
+		{
+			SetFlashTimer();
+		}
+
 		m_FlashTimer.Update(Time.deltaTime);
 		m_DurationTimer.Update(Time.deltaTime);
 
@@ -38,14 +43,20 @@ public class FlashCode : MonoBehaviour
 		//Once the duration has finished, we want the sprite to be disable, indicate that the gameobject (rabbit) has died.
 		if (m_DurationTimer.HasCompleted() && m_CanFlash)
 		{
-			m_SpriteRenderer.enabled = false;
+			foreach (SpriteRenderer renderer in m_SpriteRendererArray)
+			{
+				renderer.enabled = false;
+			}
 			//m_CanFlash won't ever go to false, so can't occur.
 		}
 	}
 
 	void Flash()
 	{
-		m_SpriteRenderer.enabled = !m_SpriteRenderer.enabled;
+		foreach (SpriteRenderer renderer in m_SpriteRendererArray)
+		{
+			renderer.enabled = !renderer.enabled;
+		}
 	}
 
 	public void SetFlashTimer()
