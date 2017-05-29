@@ -30,6 +30,7 @@ public class FadeOut : MonoBehaviour
 	void Update()
 	{
 		m_Timer += Time.deltaTime;
+		print(m_Timer);
 
 		if (m_Timer < FADE_DURATION)
 		{
