@@ -6,36 +6,38 @@ public class FadeOut : MonoBehaviour
 {
 	[Header("CONST")]
 	[SerializeField]
-	float FADE_DURATION = 2f;
+	float FADE_DURATION = 1f;
 
 	[Header("Variables")]
-	[SerializeField]
-	float m_Timer = 0;
 	[SerializeField]
 	Color m_PanelColor;
 
 	[Header ("Accessor")]
 	[SerializeField]
+	Canvas m_FadeOutCanvas;
+	[SerializeField]
 	Image m_Panel;
 	[SerializeField]
 	GameObject m_MusicManager;
+	[SerializeField]
+	Timer m_FadeTimer;
 
 	void Start () 
 	{
 		//Part of fade out code, game starts as white, when time up, reveals menu
 		m_PanelColor = Color.white;
 		m_Panel.color = m_PanelColor;
+		m_FadeTimer.SetTimer(FADE_DURATION);
 	}
 
 	void Update()
 	{
-		m_Timer += Time.deltaTime;
-		print(m_Timer);
-
-		if (m_Timer < FADE_DURATION)
+		m_FadeTimer.Update(Time.deltaTime);
+		if (m_FadeTimer.GetTimer() > 0)
 		{
-			float alpha = m_Timer / FADE_DURATION;
-			m_PanelColor.a -= alpha;
+			print(m_FadeTimer.GetTimer() + " gettime");
+			float alpha = (m_FadeTimer.GetTimer()/FADE_DURATION);
+			m_PanelColor.a = alpha;
 			m_Panel.color = m_PanelColor;
 			if (alpha < 1)
 			{
@@ -46,7 +48,10 @@ public class FadeOut : MonoBehaviour
 		}
 		else
 		{
+			//disable fadeoutPanel
 			gameObject.SetActive(false);
+			//disable the fadeout canvas that the panel is on
+			m_FadeOutCanvas.gameObject.SetActive(false);
 		}
 	}
 

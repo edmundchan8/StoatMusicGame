@@ -51,6 +51,7 @@ public class GameManager : MonoBehaviour
 	//TODO Need to get this to work from Level Manager script instead
 	public void ReturnToTitle()
 	{
+		PlayGameAndMusic();
 		SceneManager.LoadScene("Menu");
 	}
 }
