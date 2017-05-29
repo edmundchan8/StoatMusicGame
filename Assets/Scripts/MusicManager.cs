@@ -119,4 +119,14 @@ public class MusicManager : MonoBehaviour
 	{ 
 		return m_GameOverText.activeInHierarchy;
 	}
+
+	public void PauseMusic()
+	{
+		m_Audiosource.Pause();
+	}
+
+	public void PlayMusic()
+	{
+		m_Audiosource.Play();
+	}
 }
