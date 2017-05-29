@@ -24,8 +24,7 @@ public class CountDown : MonoBehaviour
 		if (m_Timer <= 0)
 		{
 			//Start music
-			m_AudioSource.Play();
-			m_MusicManager.SetCanInstantiateTrue();
+			m_MusicManager.PlayMusic();
 			Destroy(this.gameObject);
 		}
 	}

@@ -128,5 +128,6 @@ public class MusicManager : MonoBehaviour
 	public void PlayMusic()
 	{
 		m_Audiosource.Play();
+		SetCanInstantiateTrue();
 	}
 }
