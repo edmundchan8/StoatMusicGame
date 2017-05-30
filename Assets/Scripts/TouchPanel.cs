@@ -98,7 +98,7 @@ public class TouchPanel : MonoBehaviour
 		//TODO: Code here is to play game with keyboard space bar input only, like debug mode
 		if (Input.GetKeyDown(KeyCode.Space))
 		{
-
+			print(m_MusicTime);
 			//for debug purposes, when we hit space, disable the miss detected code
 				
 			CheckMusicAgainstTiming();
@@ -261,6 +261,7 @@ public class TouchPanel : MonoBehaviour
 	void CheckMusicAgainstTiming () 
 	{
 		//make note of time which you touched screen
+		//plus an offset
 		float hitTime = m_MusicTime;
 		//go through list 
 		for (int i = 0; i < m_MusicList.Count; i++)
@@ -315,7 +316,7 @@ public class TouchPanel : MonoBehaviour
 
 	void CheckNumberPoors()
 	{
-		if (m_NumPoors >= 3)
+		if (m_NumPoors >= 30)
 		{
 			m_RabbitScript.RunAway();
 		}
