@@ -70,12 +70,14 @@ public class MusicManager : MonoBehaviour
 			if (m_NoteIndexToPlay < m_MusicTimeText.Length)
 			{
 				//take current music time to check against from the music list, minus instantiate offset time, convert to 2 decimal places
-				string InstantiateMusicNoteTime = (m_MusicPlayTimeList[m_NoteIndexToPlay] - NOTE_INSTANTIATE_OFFSET).ToString("F2");
-				//round the current audio time to 1 decimal places, then output to 2 decimal places
-				string RoundedCurrentAudioTime = System.Math.Round(audioTime, 1).ToString("F2");
+				float InstantiateMusicNoteTime = (m_MusicPlayTimeList[m_NoteIndexToPlay] - NOTE_INSTANTIATE_OFFSET);//.ToString("F2");
+				//round the current audio time to 2 decimal places, then output to 2 decimal places
+				float RoundedCurrentAudioTime = (float)System.Math.Round(audioTime, 2);//.ToString("F2");
+				print(InstantiateMusicNoteTime + " InstantiateMusicNoteTime");
+				print(RoundedCurrentAudioTime + " RoundedCurrentAudioTime");
 
 				//Comparing both STRINGS from above
-				if (RoundedCurrentAudioTime == InstantiateMusicNoteTime)
+				if (RoundedCurrentAudioTime >= InstantiateMusicNoteTime)
 				{
 					m_NoteIndexToPlay++;
 					InstantiateMusicNotes();

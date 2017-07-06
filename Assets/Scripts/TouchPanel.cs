@@ -89,18 +89,10 @@ public class TouchPanel : MonoBehaviour
 		m_MusicTime = m_MusicManager.GetCurrentMusicTime();
 
 		CheckNumberPoors();
-
-		if (Input.GetKeyDown(KeyCode.R))
-		{
-			m_StoatScript.SetLerpPositions();
-		}
-
 		//TODO: Code here is to play game with keyboard space bar input only, like debug mode
 		if (Input.GetKeyDown(KeyCode.Space))
 		{
-			print(m_MusicTime);
 			//for debug purposes, when we hit space, disable the miss detected code
-				
 			CheckMusicAgainstTiming();
 			/*
 			//print(dictionary.Key);

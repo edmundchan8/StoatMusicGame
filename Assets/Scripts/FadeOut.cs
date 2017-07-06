@@ -35,7 +35,6 @@ public class FadeOut : MonoBehaviour
 		m_FadeTimer.Update(Time.deltaTime);
 		if (m_FadeTimer.GetTimer() > 0)
 		{
-			print(m_FadeTimer.GetTimer() + " gettime");
 			float alpha = (m_FadeTimer.GetTimer()/FADE_DURATION);
 			m_PanelColor.a = alpha;
 			m_Panel.color = m_PanelColor;
