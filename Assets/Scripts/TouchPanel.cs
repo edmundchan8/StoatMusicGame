@@ -258,6 +258,7 @@ public class TouchPanel : MonoBehaviour
 		//go through list 
 		for (int i = 0; i < m_MusicList.Count; i++)
 		{
+			print(hitTime);
 			if (hitTime > m_MusicList[i] - EXCELLENT_MIN_MAX && hitTime < m_MusicList[i] + EXCELLENT_MIN_MAX)
 			{
 				m_ComboScript.IncreaseCombo(1);
