@@ -31,12 +31,12 @@ public class MusicManager : MonoBehaviour
 	public List<float> m_MusicPlayTimeList = new List<float>();
 	[SerializeField]
 	int m_NoteIndexToPlay = 0;
-	//Because the instantiate gameobject is further away from where we want the touch the note, instantiate the music note 2.6f early.
+	//Because the instantiate gameobject is further away from where we want the touch the note, instantiate the music note 2.4f early.
 	[SerializeField]
 	float NOTE_INSTANTIATE_OFFSET = 2.6f;
 
 	[SerializeField]
-	float DELAY_INSTANTIATE_DURATION = 0.2f;
+	float DELAY_INSTANTIATE_DURATION = 0.1f;
 
 	[SerializeField]
 	float FADE_VOLUME_AMOUNT = 0.02f;
@@ -66,22 +66,27 @@ public class MusicManager : MonoBehaviour
 
 		if (m_CanInstantiateNote && !IsGameOver())
 		{
-			//n.b. music note takes 2.6f seconds to get to target from instantiate point.
+			//n.b. music note takes 2.4f seconds to get to target from instantiate point.
 			if (m_NoteIndexToPlay < m_MusicTimeText.Length)
 			{
 				//take current music time to check against from the music list, minus instantiate offset time, convert to 2 decimal places
-				string InstantiateMusicNoteTime = (m_MusicPlayTimeList[m_NoteIndexToPlay] - NOTE_INSTANTIATE_OFFSET).ToString("F2");
-				//round the current audio time to 1 decimal places, then output to 2 decimal places
-				string RoundedCurrentAudioTime = System.Math.Round(audioTime, 1).ToString("F2");
+				float InstantiateMusicNoteTime = (m_MusicPlayTimeList[m_NoteIndexToPlay] - NOTE_INSTANTIATE_OFFSET);
+				//round the current audio time to 2 decimal places, then output to 2 decimal places
+				float RoundedCurrentAudioTime = (float)System.Math.Round(audioTime, 2);
 
 				//Comparing both STRINGS from above
-				if (RoundedCurrentAudioTime == InstantiateMusicNoteTime)
+				if (RoundedCurrentAudioTime >= InstantiateMusicNoteTime)
 				{
 					m_NoteIndexToPlay++;
 					InstantiateMusicNotes();
+					//This is not good, need to fix this as it is causinng very close music taps to not instantiate
 					Invoke("SetCanInstantiateTrue", DELAY_INSTANTIATE_DURATION);
 				}
 			}
+			else if (m_NoteIndexToPlay >= m_MusicTimeText.Length)
+			{
+			//End of music, stoat jumps to kill rabbit
+			} 
 		}
 	}
 
@@ -128,5 +133,6 @@ public class MusicManager : MonoBehaviour
 	public void PlayMusic()
 	{
 		m_Audiosource.Play();
+		SetCanInstantiateTrue();
 	}
 }

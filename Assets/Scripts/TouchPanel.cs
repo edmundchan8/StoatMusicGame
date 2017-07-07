@@ -10,9 +10,9 @@ public class TouchPanel : MonoBehaviour
 
 	[Header("Constants")]
 	[SerializeField]
-	float EXCELLENT_MIN_MAX = 0.1f;
+	float EXCELLENT_MIN_MAX = 0.13f;
 	[SerializeField]
-	float GOOD_MIN_MAX = 0.2f;
+	float GOOD_MIN_MAX = 0.25f;
 
 	[Header ("Text pop ups")]
 	//Hold the gameobjects that we will use to show the text in the game
@@ -89,18 +89,10 @@ public class TouchPanel : MonoBehaviour
 		m_MusicTime = m_MusicManager.GetCurrentMusicTime();
 
 		CheckNumberPoors();
-
-		if (Input.GetKeyDown(KeyCode.R))
-		{
-			m_StoatScript.SetLerpPositions();
-		}
-
 		//TODO: Code here is to play game with keyboard space bar input only, like debug mode
 		if (Input.GetKeyDown(KeyCode.Space))
 		{
-
 			//for debug purposes, when we hit space, disable the miss detected code
-				
 			CheckMusicAgainstTiming();
 			/*
 			//print(dictionary.Key);
@@ -261,10 +253,12 @@ public class TouchPanel : MonoBehaviour
 	void CheckMusicAgainstTiming () 
 	{
 		//make note of time which you touched screen
+		//plus an offset
 		float hitTime = m_MusicTime;
 		//go through list 
 		for (int i = 0; i < m_MusicList.Count; i++)
 		{
+			print(hitTime);
 			if (hitTime > m_MusicList[i] - EXCELLENT_MIN_MAX && hitTime < m_MusicList[i] + EXCELLENT_MIN_MAX)
 			{
 				m_ComboScript.IncreaseCombo(1);
@@ -315,7 +309,7 @@ public class TouchPanel : MonoBehaviour
 
 	void CheckNumberPoors()
 	{
-		if (m_NumPoors >= 3)
+		if (m_NumPoors >= 30)
 		{
 			m_RabbitScript.RunAway();
 		}
