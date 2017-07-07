@@ -10,9 +10,9 @@ public class TouchPanel : MonoBehaviour
 
 	[Header("Constants")]
 	[SerializeField]
-	float EXCELLENT_MIN_MAX = 0.1f;
+	float EXCELLENT_MIN_MAX = 0.15f;
 	[SerializeField]
-	float GOOD_MIN_MAX = 0.2f;
+	float GOOD_MIN_MAX = 0.3f;
 
 	[Header ("Text pop ups")]
 	//Hold the gameobjects that we will use to show the text in the game

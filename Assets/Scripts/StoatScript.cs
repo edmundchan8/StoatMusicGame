@@ -22,7 +22,7 @@ public class StoatScript : MonoBehaviour
 
 	[Header ("Stoat Move Times")]
 	[SerializeField]
-	float[] m_Level01MoveTimeArr = new float[]{32f, 70f};
+	float[] m_Level01MoveTimeArr = new float[]{32f, 68f};
 
 	[SerializeField]
 	int m_ArrayCounter=0;

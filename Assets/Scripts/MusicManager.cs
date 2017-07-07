@@ -85,7 +85,7 @@ public class MusicManager : MonoBehaviour
 			}
 			else if (m_NoteIndexToPlay >= m_MusicTimeText.Length)
 			{
-				print("End of music" + Time.time);
+			//	print("End of music" + Time.time);
 			} 
 		}
 	}
