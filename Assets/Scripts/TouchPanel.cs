@@ -13,6 +13,7 @@ public class TouchPanel : MonoBehaviour
 	float EXCELLENT_MIN_MAX = 0.13f;
 	[SerializeField]
 	float GOOD_MIN_MAX = 0.25f;
+	bool m_SparkActive = false;
 
 	[Header ("Text pop ups")]
 	//Hold the gameobjects that we will use to show the text in the game
@@ -44,6 +45,8 @@ public class TouchPanel : MonoBehaviour
 	[SerializeField]
 	ScoreScript m_ScoreScript;
 	RabbitScript m_RabbitScript;
+	[SerializeField]
+	GameObject m_Spark;
 
 	[Header ("GitHub code - Remove later?")]
 	[SerializeField]
@@ -258,7 +261,6 @@ public class TouchPanel : MonoBehaviour
 		//go through list 
 		for (int i = 0; i < m_MusicList.Count; i++)
 		{
-			print(hitTime);
 			if (hitTime > m_MusicList[i] - EXCELLENT_MIN_MAX && hitTime < m_MusicList[i] + EXCELLENT_MIN_MAX)
 			{
 				m_ComboScript.IncreaseCombo(1);
@@ -271,6 +273,7 @@ public class TouchPanel : MonoBehaviour
 				//There was an error before where, if the timings were too close together (2.5f, 2.7f, 2.9f), the timing wouldn't know which to test against.
 				//By removing a timing from the list, the code won't retest a timing we have tried before.
 				m_MusicList.Remove(m_MusicList[i]);
+				StartCoroutine("ToggleTouchPanelSpark");
 				return;
 			}
 			else if (hitTime > m_MusicList[i] - GOOD_MIN_MAX && hitTime < m_MusicList[i] + GOOD_MIN_MAX)
@@ -313,5 +316,12 @@ public class TouchPanel : MonoBehaviour
 		{
 			m_RabbitScript.RunAway();
 		}
+	}
+
+	IEnumerator ToggleTouchPanelSpark()
+	{
+		m_Spark.gameObject.SetActive(true);
+		yield return new WaitForSeconds(0.15f);
+		m_Spark.gameObject.SetActive(false);
 	}
 }
