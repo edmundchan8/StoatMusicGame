@@ -14,6 +14,8 @@ public class TouchPanel : MonoBehaviour
 	[SerializeField]
 	float GOOD_MIN_MAX = 0.25f;
 	bool m_SparkActive = false;
+	[SerializeField]
+	int FAIL_LIMIT = 3;
 
 	[Header ("Text pop ups")]
 	//Hold the gameobjects that we will use to show the text in the game
@@ -312,7 +314,7 @@ public class TouchPanel : MonoBehaviour
 
 	void CheckNumberPoors()
 	{
-		if (m_NumPoors >= 30)
+		if (m_NumPoors >= FAIL_LIMIT)
 		{
 			m_RabbitScript.RunAway();
 		}
