@@ -19,6 +19,7 @@ public class StoatScript : MonoBehaviour
 	GameObject m_MusicManagerObject;
 	[SerializeField]
 	MusicManager m_MusicManagerScript;
+	Animator m_Animator;
 
 	[Header ("Stoat Move Times")]
 	[SerializeField]
@@ -32,10 +33,13 @@ public class StoatScript : MonoBehaviour
 		m_StartPos = transform.position;
 		m_EndPos = transform.position;
 		m_MusicManagerScript = m_MusicManagerObject.GetComponent<MusicManager>();
+		m_Animator = gameObject.transform.GetChild(0).GetComponent<Animator>();
 	}
 
 	void Update()
 	{
+		//Timer is ticking, move closer to rabbit as long as the current array counter is less than 2 and if music time is less than the value in the 
+		//m_Level01TimerArray[ ] , then set the lerp position and increment m_ArrayCounter
 		m_Timer.Update(Time.deltaTime);
 		MoveCloserRabbit();
 		if (m_ArrayCounter < 2)
@@ -58,5 +62,11 @@ public class StoatScript : MonoBehaviour
 		m_StartPos = transform.position;
 		m_EndPos = new Vector2(transform.position.x + m_MoveAmount, transform.position.y);
 		m_Timer.SetTimer(m_MoveDuration);
+	}
+
+	IEnumerator Bite()
+	{
+		yield return new WaitForSeconds(1.5f);
+		m_Animator.SetTrigger("isBiting");
 	}
 }

@@ -14,6 +14,8 @@ public class TouchPanel : MonoBehaviour
 	[SerializeField]
 	float GOOD_MIN_MAX = 0.25f;
 	bool m_SparkActive = false;
+	[SerializeField]
+	int FAIL_LIMIT = 3;
 
 	[Header ("Text pop ups")]
 	//Hold the gameobjects that we will use to show the text in the game
@@ -225,9 +227,10 @@ public class TouchPanel : MonoBehaviour
 
 	void InstantiateTextGameObject () 
 	{
-		GameObject theTextObject = Instantiate(m_TextResult, m_TextPosition.transform.position, transform.rotation) as GameObject;
+		GameObject theTextObject = Instantiate(m_TextResult, m_TextPosition.transform.position, transform.rotation, m_TextPosition.transform) as GameObject;
 		//We use SetParent so that we can set the world position to false
-		theTextObject.transform.SetParent(m_TextPosition.transform, false);
+		//theTextObject.transform.SetParent(, false);
+		print(theTextObject.name);
 	}
 
 	//if you touch a music note, then destroy it 
@@ -312,7 +315,7 @@ public class TouchPanel : MonoBehaviour
 
 	void CheckNumberPoors()
 	{
-		if (m_NumPoors >= 30)
+		if (m_NumPoors >= FAIL_LIMIT)
 		{
 			m_RabbitScript.RunAway();
 		}

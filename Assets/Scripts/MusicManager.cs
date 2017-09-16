@@ -6,6 +6,7 @@ public class MusicManager : MonoBehaviour
 {
 	[SerializeField]
 	bool m_CanInstantiateNote = false;
+	bool m_CanEndLevel = true;
 
 	//Position where the notes to touch are generated
 	[SerializeField]
@@ -25,6 +26,8 @@ public class MusicManager : MonoBehaviour
 	AudioSource m_Audiosource;
 	[SerializeField]
 	GameObject m_GameOverText;
+	[SerializeField]
+	StoatScript m_StoatScript;
 
 	//List to hold the music note instantiate times
 	[SerializeField]
@@ -44,6 +47,7 @@ public class MusicManager : MonoBehaviour
 	void Awake()
 	{	//TODO: Switch statement later.  Depending on the level, set the LEVEL_TEXT To use 
 		m_MusicTimeText = EASY_LEVEL_01.text.Split('\n');
+		m_StoatScript = GameObject.Find("Stoat").GetComponent<StoatScript>();
 	}
 
 	void Start()
@@ -85,8 +89,15 @@ public class MusicManager : MonoBehaviour
 			}
 			else if (m_NoteIndexToPlay >= m_MusicTimeText.Length)
 			{
-			//End of music, stoat jumps to kill rabbit
-			} 
+				//End of music, stoat jumps to kill rabbit
+				if (m_CanEndLevel)
+				{
+					m_StoatScript.SetLerpPositions();
+					m_StoatScript.MoveCloserRabbit();
+					m_StoatScript.StartCoroutine("Bite");
+					m_CanEndLevel = false;
+				}
+			}
 		}
 	}
 
