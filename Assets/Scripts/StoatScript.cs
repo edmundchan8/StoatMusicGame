@@ -64,8 +64,9 @@ public class StoatScript : MonoBehaviour
 		m_Timer.SetTimer(m_MoveDuration);
 	}
 
-	public void Bite()
+	IEnumerator Bite()
 	{
+		yield return new WaitForSeconds(1.5f);
 		m_Animator.SetTrigger("isBiting");
 	}
 }

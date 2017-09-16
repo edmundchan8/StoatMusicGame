@@ -89,15 +89,15 @@ public class MusicManager : MonoBehaviour
 			}
 			else if (m_NoteIndexToPlay >= m_MusicTimeText.Length)
 			{
-			//End of music, stoat jumps to kill rabbit
-				if(m_CanEndLevel)
+				//End of music, stoat jumps to kill rabbit
+				if (m_CanEndLevel)
 				{
 					m_StoatScript.SetLerpPositions();
 					m_StoatScript.MoveCloserRabbit();
-					m_StoatScript.Bite();
+					m_StoatScript.StartCoroutine("Bite");
 					m_CanEndLevel = false;
 				}
-			} 
+			}
 		}
 	}
 
