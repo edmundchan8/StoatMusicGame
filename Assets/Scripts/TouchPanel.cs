@@ -227,9 +227,10 @@ public class TouchPanel : MonoBehaviour
 
 	void InstantiateTextGameObject () 
 	{
-		GameObject theTextObject = Instantiate(m_TextResult, m_TextPosition.transform.position, transform.rotation) as GameObject;
+		GameObject theTextObject = Instantiate(m_TextResult, m_TextPosition.transform.position, transform.rotation, m_TextPosition.transform) as GameObject;
 		//We use SetParent so that we can set the world position to false
-		theTextObject.transform.SetParent(m_TextPosition.transform, false);
+		//theTextObject.transform.SetParent(, false);
+		print(theTextObject.name);
 	}
 
 	//if you touch a music note, then destroy it 
