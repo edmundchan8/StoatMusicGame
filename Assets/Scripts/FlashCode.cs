@@ -27,11 +27,6 @@ public class FlashCode : MonoBehaviour
 
 	void Update ()
 	{
-		if (Input.GetKey(KeyCode.T))
-		{
-			SetFlashTimer();
-		}
-
 		m_FlashTimer.Update(Time.deltaTime);
 		m_DurationTimer.Update(Time.deltaTime);
 
