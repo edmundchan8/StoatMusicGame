@@ -47,6 +47,7 @@ public class TouchPanel : MonoBehaviour
 	[SerializeField]
 	ScoreScript m_ScoreScript;
 	RabbitScript m_RabbitScript;
+	GameObject m_Rabbit;
 	[SerializeField]
 	GameObject m_Spark;
 
@@ -80,7 +81,8 @@ public class TouchPanel : MonoBehaviour
 		m_ScoreScript = m_ScoreObject.GetComponent<ScoreScript>();
 		m_Stoat = GameObject.Find("Stoat");
 		m_StoatScript = m_Stoat.GetComponent<StoatScript>();
-		m_RabbitScript = GameObject.Find("Rabbit").GetComponent<RabbitScript>();
+		m_Rabbit = GameObject.Find("Rabbit");
+		m_RabbitScript = m_Rabbit.GetComponent<RabbitScript>();
 		//I will remove items from the music list (list that helps instantiate music notes, so I want to create for this script a new unique list
 		m_MusicList = new List<float>();
 		//copy all the values from the musicmanager list to this list
@@ -227,10 +229,7 @@ public class TouchPanel : MonoBehaviour
 
 	void InstantiateTextGameObject () 
 	{
-		GameObject theTextObject = Instantiate(m_TextResult, m_TextPosition.transform.position, transform.rotation, m_TextPosition.transform) as GameObject;
-		//We use SetParent so that we can set the world position to false
-		//theTextObject.transform.SetParent(, false);
-		print(theTextObject.name);
+		Instantiate(m_TextResult, m_TextPosition.transform.position, transform.rotation, m_TextPosition.transform);
 	}
 
 	//if you touch a music note, then destroy it 
@@ -315,10 +314,10 @@ public class TouchPanel : MonoBehaviour
 
 	void CheckNumberPoors()
 	{
-		if (m_NumPoors >= FAIL_LIMIT)
-		{
-			m_RabbitScript.RunAway();
-		}
+		if (m_NumPoors >= FAIL_LIMIT && m_Rabbit != null)
+			{
+				m_RabbitScript.RunAway();
+			}
 	}
 
 	IEnumerator ToggleTouchPanelSpark()

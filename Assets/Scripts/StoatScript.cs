@@ -14,12 +14,16 @@ public class StoatScript : MonoBehaviour
 	[SerializeField]
 	Timer m_Timer;
 
+	float DELAY_BITE_DURATION = 2.5f;
+
 	[Header ("Accessor")]
 	[SerializeField]
 	GameObject m_MusicManagerObject;
 	[SerializeField]
 	MusicManager m_MusicManagerScript;
 	Animator m_Animator;
+	[SerializeField]
+	RabbitScript m_RabbitScript;
 
 	[Header ("Stoat Move Times")]
 	[SerializeField]
@@ -34,10 +38,16 @@ public class StoatScript : MonoBehaviour
 		m_EndPos = transform.position;
 		m_MusicManagerScript = m_MusicManagerObject.GetComponent<MusicManager>();
 		m_Animator = gameObject.transform.GetChild(0).GetComponent<Animator>();
+		GameObject rabbit = GameObject.Find("Rabbit");
+		m_RabbitScript = rabbit.GetComponentInChildren<RabbitScript>();
 	}
 
 	void Update()
 	{
+		if (Input.GetKey(KeyCode.B))
+		{
+			StartCoroutine("Bite");
+		}
 		//Timer is ticking, move closer to rabbit as long as the current array counter is less than 2 and if music time is less than the value in the 
 		//m_Level01TimerArray[ ] , then set the lerp position and increment m_ArrayCounter
 		m_Timer.Update(Time.deltaTime);
@@ -66,7 +76,9 @@ public class StoatScript : MonoBehaviour
 
 	IEnumerator Bite()
 	{
-		yield return new WaitForSeconds(1.5f);
+		yield return new WaitForSeconds(DELAY_BITE_DURATION);
 		m_Animator.SetTrigger("isBiting");
+		yield return new WaitForSeconds(0.5f);
+		m_RabbitScript.Bitten();
 	}
 }
