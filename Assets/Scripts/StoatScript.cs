@@ -44,10 +44,6 @@ public class StoatScript : MonoBehaviour
 
 	void Update()
 	{
-		if (Input.GetKey(KeyCode.B))
-		{
-			StartCoroutine("Bite");
-		}
 		//Timer is ticking, move closer to rabbit as long as the current array counter is less than 2 and if music time is less than the value in the 
 		//m_Level01TimerArray[ ] , then set the lerp position and increment m_ArrayCounter
 		m_Timer.Update(Time.deltaTime);
@@ -80,5 +76,12 @@ public class StoatScript : MonoBehaviour
 		m_Animator.SetTrigger("isBiting");
 		yield return new WaitForSeconds(0.5f);
 		m_RabbitScript.Bitten();
+	}
+
+	public void ReturnToStartPos()
+	{
+		m_StartPos = transform.position;
+		m_EndPos = new Vector2(-2, 0);
+		m_Timer.SetTimer(m_MoveDuration);
 	}
 }
