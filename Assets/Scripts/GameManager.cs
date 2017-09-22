@@ -11,6 +11,8 @@ public class GameManager : MonoBehaviour
 	GameObject m_PauseCanvas;
 	[SerializeField]
 	MusicManager m_MusicManager;
+	[SerializeField]
+	public GameOverScript m_GameOverScript;
 
 	[SerializeField]
 	bool m_Pause = false;
@@ -53,5 +55,10 @@ public class GameManager : MonoBehaviour
 	{
 		PlayGameAndMusic();
 		SceneManager.LoadScene("Menu");
+	}
+
+	public GameOverScript ReturnGameOverScript()
+	{
+		return m_GameOverScript;
 	}
 }

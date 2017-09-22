@@ -23,8 +23,6 @@ public class GameOverScript : MonoBehaviour
 	[SerializeField]
 	float m_Alpha = 0;
 
-
-
 	float m_DebugTime;
 
 	void Start () 
