@@ -94,6 +94,7 @@ public class TouchPanel : MonoBehaviour
 
 	void Update () 
 	{
+		//TODO: if rabbit null && NOT END OF GAME
 		if (m_Rabbit == null)
 		{
 			m_Rabbit = GameObject.FindGameObjectWithTag("Rabbit");

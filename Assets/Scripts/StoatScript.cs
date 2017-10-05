@@ -97,7 +97,8 @@ public class StoatScript : MonoBehaviour
 	public void FindRabbit()
 	{
 		Vector2 startPos = new Vector2(4, 0);
-		m_CurrentRabbit = Instantiate(m_RabbitPrefab, startPos, transform.rotation) as GameObject;
+		m_CurrentRabbit = GameManager.instance.InstantiateRabbit();
+		m_CurrentRabbit.transform.localPosition = startPos;
 		m_RabbitScript = m_CurrentRabbit.GetComponentInChildren<RabbitScript>();
 	}
 }

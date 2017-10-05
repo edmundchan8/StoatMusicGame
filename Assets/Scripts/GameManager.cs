@@ -59,10 +59,10 @@ public class GameManager : MonoBehaviour
 		if (!m_Timer.HasCompleted())
 		{
 			m_GameBackground.transform.localPosition = Vector2.Lerp(m_StartLerpPos, m_BackgroundPos, (LERP_DURATION - m_Timer.GetTimer()) / LERP_DURATION);
-		}
-		else
-		{
-			Instantiate(m_Rabbit, transform.position, transform.rotation);
+			if (m_Timer.GetTimer() <= 0f)
+			{
+				InstantiateRabbit();
+			}
 		}
 	}
 
@@ -132,5 +132,10 @@ public class GameManager : MonoBehaviour
 	public GameOverScript ReturnGameOverScript()
 	{
 		return m_GameOverScript;
+	}
+
+	public GameObject InstantiateRabbit()
+	{
+		return Instantiate(m_Rabbit, transform.position, transform.rotation) as GameObject;
 	}
 }

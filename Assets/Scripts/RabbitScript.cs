@@ -9,8 +9,6 @@ public class RabbitScript : MonoBehaviour
 	float DEATH_DURATION = 4f;
 
 	[Header("Accessor")]
-	GameObject m_GameManager;
-	GameManager m_GameManagerScript;
 	GameOverScript m_GameOverScript;
 	Animator m_Animator;
 
@@ -18,11 +16,9 @@ public class RabbitScript : MonoBehaviour
 
 	void Start()
 	{
-		m_GameManager = GameObject.FindGameObjectWithTag("GameManager");
-		m_GameManagerScript = m_GameManager.GetComponent<GameManager>();
 		m_Animator = transform.GetChild(0).GetComponent<Animator>();
-		m_GameOverScript = m_GameManagerScript.ReturnGameOverScript();
 		IsEnteringScene(true);
+		m_GameOverScript = GameManager.instance.ReturnGameOverScript();
 	}
 
 	void Update()
@@ -32,8 +28,7 @@ public class RabbitScript : MonoBehaviour
 			DestroyAfterTime();
 		}
 		if (m_BeginRun)
-		{	
-			print("run");
+		{
 			transform.Translate(Vector2.right * Time.deltaTime * SPEED);
 		}
 	}
@@ -68,6 +63,5 @@ public class RabbitScript : MonoBehaviour
 	public void IsEnteringScene(bool choice)
 	{
 		m_Animator.SetBool("isEntering", choice);
-
 	}
 }
