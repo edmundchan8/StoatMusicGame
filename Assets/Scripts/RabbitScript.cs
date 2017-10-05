@@ -24,6 +24,10 @@ public class RabbitScript : MonoBehaviour
 
 	void Update()
 	{
+		if (Input.GetKeyUp(KeyCode.Q))
+		{
+			DestroyAfterTime();
+		}
 		if (m_BeginRun)
 		{	
 			transform.Translate(Vector2.right * Time.deltaTime * SPEED);
@@ -47,6 +51,13 @@ public class RabbitScript : MonoBehaviour
 	//Consider if we still want this as it causes some conflicts/null reference exceptions later on once destroyed
 	public void DestroyAfterTime()
 	{
+		StartCoroutine("IncreaseLevelCount");
 		Destroy(gameObject, DEATH_DURATION);
+	}
+
+	IEnumerator IncreaseLevelCount()
+	{
+		yield return new WaitForSeconds(DEATH_DURATION);	
+		GameManager.instance.IncrementCurrentLevel();
 	}
 }
