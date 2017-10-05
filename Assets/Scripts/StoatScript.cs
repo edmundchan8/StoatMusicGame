@@ -15,6 +15,7 @@ public class StoatScript : MonoBehaviour
 	Timer m_Timer;
 
 	float DELAY_BITE_DURATION = 2.5f;
+	Vector2 RABBIT_START_POS = new Vector2 (2, 0);
 
 	[Header ("Accessor")]
 	[SerializeField]
@@ -24,13 +25,18 @@ public class StoatScript : MonoBehaviour
 	Animator m_Animator;
 	[SerializeField]
 	RabbitScript m_RabbitScript;
+	[SerializeField]
+	GameObject m_RabbitPrefab;
+	GameObject m_CurrentRabbit;
+
+	TouchPanel m_TouchPanel;
 
 	[Header ("Stoat Move Times")]
 	[SerializeField]
 	float[] m_Level01MoveTimeArr = new float[]{32f, 68f};
 
 	[SerializeField]
-	int m_ArrayCounter=0;
+	int m_ArrayCounter = 0;
 
 	void Start()
 	{
@@ -38,15 +44,21 @@ public class StoatScript : MonoBehaviour
 		m_EndPos = transform.position;
 		m_MusicManagerScript = m_MusicManagerObject.GetComponent<MusicManager>();
 		m_Animator = gameObject.transform.GetChild(0).GetComponent<Animator>();
-		GameObject rabbit = GameObject.Find("Rabbit");
-		m_RabbitScript = rabbit.GetComponentInChildren<RabbitScript>();
+		FindRabbit();
+		m_TouchPanel = GameObject.FindGameObjectWithTag("TouchPanel").GetComponent<TouchPanel>();
 	}
 
 	void Update()
 	{
-		if (Input.GetKey(KeyCode.B))
+		if (m_CurrentRabbit.transform.position.x > 2.1f && !m_TouchPanel.m_IsGameOver)
 		{
-			StartCoroutine("Bite");
+			Vector2 pos = m_CurrentRabbit.transform.position;
+			pos.x -= Time.deltaTime;
+			m_CurrentRabbit.transform.position = pos;
+			if (pos.x < 2.1f)
+			{
+				m_RabbitScript.IsEnteringScene(false);
+			}
 		}
 		//Timer is ticking, move closer to rabbit as long as the current array counter is less than 2 and if music time is less than the value in the 
 		//m_Level01TimerArray[ ] , then set the lerp position and increment m_ArrayCounter
@@ -80,5 +92,12 @@ public class StoatScript : MonoBehaviour
 		m_Animator.SetTrigger("isBiting");
 		yield return new WaitForSeconds(0.5f);
 		m_RabbitScript.Bitten();
+	}
+
+	public void FindRabbit()
+	{
+		Vector2 startPos = new Vector2(4, 0);
+		m_CurrentRabbit = Instantiate(m_RabbitPrefab, startPos, transform.rotation) as GameObject;
+		m_RabbitScript = m_CurrentRabbit.GetComponentInChildren<RabbitScript>();
 	}
 }

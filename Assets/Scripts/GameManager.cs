@@ -22,6 +22,7 @@ public class GameManager : MonoBehaviour
 	Vector2 m_StartLerpPos;
 	[SerializeField]
 	GameObject m_Rabbit;
+	public GameOverScript m_GameOverScript;
 
 	[SerializeField]
 	bool m_Pause = false;
@@ -127,5 +128,9 @@ public class GameManager : MonoBehaviour
 		}
 		m_Timer.SetTimer(LERP_DURATION);
 		return pos;
+	}
+	public GameOverScript ReturnGameOverScript()
+	{
+		return m_GameOverScript;
 	}
 }
