@@ -15,7 +15,6 @@ public class StoatScript : MonoBehaviour
 	Timer m_Timer;
 
 	float DELAY_BITE_DURATION = 2.5f;
-	Vector2 RABBIT_START_POS = new Vector2 (2, 0);
 
 	[Header ("Accessor")]
 	[SerializeField]

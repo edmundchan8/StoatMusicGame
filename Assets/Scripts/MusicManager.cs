@@ -44,6 +44,9 @@ public class MusicManager : MonoBehaviour
 	[SerializeField]
 	float FADE_VOLUME_AMOUNT = 0.02f;
 
+	[SerializeField]
+	public static MusicManager instance;
+
 	void Awake()
 	{	//TODO: Switch statement later.  Depending on the level, set the LEVEL_TEXT To use 
 		m_MusicTimeText = EASY_LEVEL_01.text.Split('\n');
@@ -52,6 +55,16 @@ public class MusicManager : MonoBehaviour
 
 	void Start()
 	{
+		if (!instance)
+		{
+			instance = this;
+			DontDestroyOnLoad(instance);
+		}
+		else
+		{
+			Destroy(instance);
+		}
+
 		m_GameOverText = GameObject.FindObjectOfType<GameOverScript>().gameObject;
 		if (m_GameOverText == null)
 		{

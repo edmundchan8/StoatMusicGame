@@ -50,13 +50,14 @@ public class RabbitScript : MonoBehaviour
 	//Consider if we still want this as it causes some conflicts/null reference exceptions later on once destroyed
 	public void DestroyAfterTime()
 	{
-		StartCoroutine("IncreaseLevelCount");
+		Invoke("IncreaseLevelCount",4.0f);
+		//fade out music
+
 		Destroy(gameObject, DEATH_DURATION);
 	}
 
-	IEnumerator IncreaseLevelCount()
+	void IncreaseLevelCount()
 	{
-		yield return new WaitForSeconds(DEATH_DURATION);	
 		GameManager.instance.IncrementCurrentLevel();
 	}
 
