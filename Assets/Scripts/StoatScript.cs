@@ -50,7 +50,9 @@ public class StoatScript : MonoBehaviour
 
 	void Update()
 	{
-		if (m_CurrentRabbit.transform.position.x > 2.1f && !m_TouchPanel.m_IsGameOver)
+		//TODO - might need to reword this.  When rabbit is destroy, this will still check.
+		//Should probably say, if rabbit is not destroyed && pos.x  >2.1f && is not gameover.
+		if (m_CurrentRabbit != null && m_CurrentRabbit.transform.position.x > 2.1f && !m_TouchPanel.m_IsGameOver)
 		{
 			Vector2 pos = m_CurrentRabbit.transform.position;
 			pos.x -= Time.deltaTime;
