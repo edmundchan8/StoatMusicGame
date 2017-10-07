@@ -23,6 +23,7 @@ public class RabbitScript : MonoBehaviour
 
 	void Update()
 	{
+		//DEBUG - remove later
 		if (Input.GetKeyUp(KeyCode.Q))
 		{
 			DestroyAfterTime();
@@ -51,8 +52,7 @@ public class RabbitScript : MonoBehaviour
 	public void DestroyAfterTime()
 	{
 		Invoke("IncreaseLevelCount",4.0f);
-		//fade out music
-
+		MusicManager.instance.FadeOutMusic();
 		Destroy(gameObject, DEATH_DURATION);
 	}
 

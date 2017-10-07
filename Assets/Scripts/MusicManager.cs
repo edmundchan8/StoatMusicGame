@@ -47,6 +47,10 @@ public class MusicManager : MonoBehaviour
 	[SerializeField]
 	public static MusicManager instance;
 
+	Timer m_MusicTimer = new Timer();
+
+	float FADE_DURATION = 4f;
+
 	void Awake()
 	{	//TODO: Switch statement later.  Depending on the level, set the LEVEL_TEXT To use 
 		m_MusicTimeText = EASY_LEVEL_01.text.Split('\n');
@@ -79,6 +83,13 @@ public class MusicManager : MonoBehaviour
 
 	void Update() 
 	{
+
+		m_MusicTimer.Update(Time.deltaTime);
+		if (!m_MusicTimer.HasCompleted())
+		{
+			m_Audiosource.volume *= m_MusicTimer.GetTimer()/FADE_DURATION;
+		}
+
 		float audioTime = m_Audiosource.time;
 
 		if (m_CanInstantiateNote && !IsGameOver())
@@ -138,10 +149,7 @@ public class MusicManager : MonoBehaviour
 
 	public void FadeOutMusic()
 	{
-		if (m_Audiosource.volume > 0)
-		{
-			m_Audiosource.volume -= FADE_VOLUME_AMOUNT;
-		}
+		m_MusicTimer.SetTimer(FADE_DURATION);
 	}
 
 	public bool IsGameOver()
