@@ -3,16 +3,16 @@ using System.Collections;
 
 public class RabbitScript : MonoBehaviour 
 {
+	[Header("Rabbit Attribute")]
 	[SerializeField]
 	float SPEED = 2f;
 	[SerializeField]
 	float DEATH_DURATION = 4f;
+	bool m_BeginRun = false;
 
 	[Header("Accessor")]
 	GameOverScript m_GameOverScript;
 	Animator m_Animator;
-
-	bool m_BeginRun = false;
 
 	void Start()
 	{
