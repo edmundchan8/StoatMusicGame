@@ -9,8 +9,6 @@ public class MusicManager : MonoBehaviour
 	[SerializeField]
 	TextAsset EASY_LEVEL_01;
 	[SerializeField]
-	string[] m_MusicTimeText = new string[] {};
-	[SerializeField]
 	AudioSource m_Audiosource;
 	[SerializeField]
 	GameObject m_GameOverText;
@@ -26,6 +24,8 @@ public class MusicManager : MonoBehaviour
 
 	[Header ("Music Attributes")]
 	public static MusicManager instance;
+	[SerializeField]
+	string[] m_MusicTimeText = new string[] {};
 	//List to hold the music note instantiate times
 	[SerializeField]
 	public List<float> m_MusicPlayTimeList = new List<float>();
