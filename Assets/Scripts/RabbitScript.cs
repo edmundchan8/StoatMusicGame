@@ -23,11 +23,6 @@ public class RabbitScript : MonoBehaviour
 
 	void Update()
 	{
-		//DEBUG - remove later
-		if (Input.GetKeyUp(KeyCode.Q))
-		{
-			DestroyAfterTime();
-		}
 		if (m_BeginRun)
 		{
 			transform.Translate(Vector2.right * Time.deltaTime * SPEED);
@@ -46,6 +41,7 @@ public class RabbitScript : MonoBehaviour
 	{
 		FlashCode flash = gameObject.GetComponentInChildren<FlashCode>();
 		flash.SetFlashTimer();
+		DestroyAfterTime();
 	}
 
 	//Consider if we still want this as it causes some conflicts/null reference exceptions later on once destroyed
