@@ -58,7 +58,6 @@ public class GameManager : MonoBehaviour
 
 	void Update()
 	{
-		print(m_CanInstantiateRabbit);
 		m_Timer.Update(Time.deltaTime);
 		if (!m_Timer.HasCompleted() && m_CanInstantiateRabbit)
 		{
@@ -69,7 +68,6 @@ public class GameManager : MonoBehaviour
 		{
 			if (m_CanInstantiateRabbit)
 			{
-				print("call");
 				InstantiateRabbit();
 				m_CanInstantiateRabbit = false;
 			}
