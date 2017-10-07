@@ -4,18 +4,6 @@ using System.Collections.Generic;
 
 public class MusicManager : MonoBehaviour 
 {
-	[SerializeField]
-	bool m_CanInstantiateNote = false;
-	bool m_CanEndLevel = true;
-
-	//Position where the notes to touch are generated
-	[SerializeField]
-	GameObject m_NoteInstantiatePosition;
-
-	//The note prefab to instantiate
-	[SerializeField]
-	GameObject m_Notes;
-
 	[Header ("Accessor")]
 	//Textasset notepad files to hold the length of the List, and the times which the instantiate the play notes
 	[SerializeField]
@@ -29,27 +17,30 @@ public class MusicManager : MonoBehaviour
 	[SerializeField]
 	StoatScript m_StoatScript;
 
+	[Header ("Music Constants")]
+	//Because the instantiate gameobject is further away from where we want the touch the note, instantiate the music note 2.6f early.
+	float NOTE_INSTANTIATE_OFFSET = 2.6f;
+	[SerializeField]
+	float DELAY_INSTANTIATE_DURATION = 0.1f;
+	float MUSIC_FADE_DURATION = 4f;
+
+	[Header ("Music Attributes")]
+	public static MusicManager instance;
 	//List to hold the music note instantiate times
 	[SerializeField]
 	public List<float> m_MusicPlayTimeList = new List<float>();
 	[SerializeField]
 	int m_NoteIndexToPlay = 0;
-	//Because the instantiate gameobject is further away from where we want the touch the note, instantiate the music note 2.4f early.
+	//The note prefab to instantiate
 	[SerializeField]
-	float NOTE_INSTANTIATE_OFFSET = 2.6f;
-
+	GameObject m_Notes;
+	//Position where the notes to touch are generated
 	[SerializeField]
-	float DELAY_INSTANTIATE_DURATION = 0.1f;
-
+	GameObject m_NoteInstantiatePosition;
 	[SerializeField]
-	float FADE_VOLUME_AMOUNT = 0.02f;
-
-	[SerializeField]
-	public static MusicManager instance;
-
 	Timer m_MusicTimer = new Timer();
-
-	float FADE_DURATION = 4f;
+	bool m_CanInstantiateNote = false;
+	bool m_CanEndLevel = true;
 
 	void Awake()
 	{	//TODO: Switch statement later.  Depending on the level, set the LEVEL_TEXT To use 
@@ -87,7 +78,7 @@ public class MusicManager : MonoBehaviour
 		m_MusicTimer.Update(Time.deltaTime);
 		if (!m_MusicTimer.HasCompleted())
 		{
-			m_Audiosource.volume *= m_MusicTimer.GetTimer()/FADE_DURATION;
+			m_Audiosource.volume *= m_MusicTimer.GetTimer()/MUSIC_FADE_DURATION;
 		}
 
 		float audioTime = m_Audiosource.time;
@@ -149,7 +140,7 @@ public class MusicManager : MonoBehaviour
 
 	public void FadeOutMusic()
 	{
-		m_MusicTimer.SetTimer(FADE_DURATION);
+		m_MusicTimer.SetTimer(MUSIC_FADE_DURATION);
 	}
 
 	public bool IsGameOver()
