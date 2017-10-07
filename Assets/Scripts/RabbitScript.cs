@@ -3,7 +3,7 @@ using System.Collections;
 
 public class RabbitScript : MonoBehaviour 
 {
-	[Header("Rabbit Attribute")]
+	[Header("Rabbit Attributes")]
 	[SerializeField]
 	float SPEED = 2f;
 	[SerializeField]
@@ -54,7 +54,8 @@ public class RabbitScript : MonoBehaviour
 
 	void IncreaseLevelCount()
 	{
-		GameManager.instance.IncrementCurrentLevel();
+		LevelManager.instance.IncrementLevel();
+		GameManager.instance.SetBackgroundLerpPos();
 	}
 
 	public void IsEnteringScene(bool choice)

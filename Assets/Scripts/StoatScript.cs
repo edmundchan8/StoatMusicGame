@@ -8,11 +8,9 @@ public class StoatScript : MonoBehaviour
 	float m_MoveAmount = 1f;
 	[SerializeField]
 	float m_MoveDuration = 4f;
-	[SerializeField]
-	Vector2 m_StartPos;
-	[SerializeField]
-	Vector2 m_EndPos;
 	float DELAY_BITE_DURATION = 2.5f;
+	Vector2 m_StartPos;
+	Vector2 m_EndPos;
 
 	[Header ("Accessor")]
 	[SerializeField]

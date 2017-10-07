@@ -22,7 +22,7 @@ public class MusicManager : MonoBehaviour
 	float DELAY_INSTANTIATE_DURATION = 0.1f;
 	float MUSIC_FADE_DURATION = 4f;
 
-	[Header ("Music Attributes")]
+	[Header ("Music Variables")]
 	public static MusicManager instance;
 	[SerializeField]
 	string[] m_MusicTimeText = new string[] {};
