@@ -23,6 +23,7 @@ public class GameManager : MonoBehaviour
 	[SerializeField]
 	GameObject m_Rabbit;
 	public GameOverScript m_GameOverScript;
+	bool m_CanInstantiateRabbit = true;
 
 	[SerializeField]
 	bool m_Pause = false;
@@ -45,6 +46,8 @@ public class GameManager : MonoBehaviour
 
 	void Start () 
 	{
+		InstantiateRabbit();
+		m_CanInstantiateRabbit = false;
 		m_PauseCanvas = GameObject.Find("PauseCanvas");
 		m_MusicManager = GameObject.Find("MusicManager").GetComponent<MusicManager>();
 		m_PauseCanvas.SetActive(m_Pause);
@@ -55,13 +58,20 @@ public class GameManager : MonoBehaviour
 
 	void Update()
 	{
+		print(m_CanInstantiateRabbit);
 		m_Timer.Update(Time.deltaTime);
-		if (!m_Timer.HasCompleted())
+		if (!m_Timer.HasCompleted() && m_CanInstantiateRabbit)
 		{
 			m_GameBackground.transform.localPosition = Vector2.Lerp(m_StartLerpPos, m_BackgroundPos, (LERP_DURATION - m_Timer.GetTimer()) / LERP_DURATION);
-			if (m_Timer.GetTimer() <= 0f)
+		}
+
+		if (m_Timer.HasCompleted())
+		{
+			if (m_CanInstantiateRabbit)
 			{
+				print("call");
 				InstantiateRabbit();
+				m_CanInstantiateRabbit = false;
 			}
 		}
 	}
@@ -104,6 +114,7 @@ public class GameManager : MonoBehaviour
 		m_CurrentLevel++;
 		m_StartLerpPos = m_BackgroundPos;
 		m_BackgroundPos.x = GetGameBackgroundPos();
+		m_CanInstantiateRabbit = true;
 	}
 
 	public float GetGameBackgroundPos()
@@ -136,6 +147,7 @@ public class GameManager : MonoBehaviour
 
 	public GameObject InstantiateRabbit()
 	{
+		m_CanInstantiateRabbit = false;
 		return Instantiate(m_Rabbit, transform.position, transform.rotation) as GameObject;
-	}
+	}			
 }
