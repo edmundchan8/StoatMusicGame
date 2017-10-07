@@ -3,6 +3,7 @@ using System.Collections;
 
 public class StoatScript : MonoBehaviour 
 {
+	[Header ("Stoat Attributes")]
 	[SerializeField]
 	float m_MoveAmount = 1f;
 	[SerializeField]
@@ -11,9 +12,6 @@ public class StoatScript : MonoBehaviour
 	Vector2 m_StartPos;
 	[SerializeField]
 	Vector2 m_EndPos;
-	[SerializeField]
-	Timer m_Timer;
-
 	float DELAY_BITE_DURATION = 2.5f;
 
 	[Header ("Accessor")]
@@ -27,15 +25,13 @@ public class StoatScript : MonoBehaviour
 	[SerializeField]
 	GameObject m_RabbitPrefab;
 	GameObject m_CurrentRabbit;
-
 	TouchPanel m_TouchPanel;
 
-	[Header ("Stoat Move Times")]
+	[Header ("Stoat Move Attributes")]
 	[SerializeField]
 	float[] m_Level01MoveTimeArr = new float[]{32f, 68f};
-
-	[SerializeField]
-	int m_ArrayCounter = 0;
+	Timer m_Timer = new Timer();
+	int m_TotalStepTowardsRabbit = 0;
 
 	void Start()
 	{
@@ -65,12 +61,12 @@ public class StoatScript : MonoBehaviour
 		//m_Level01TimerArray[ ] , then set the lerp position and increment m_ArrayCounter
 		m_Timer.Update(Time.deltaTime);
 		MoveCloserRabbit();
-		if (m_ArrayCounter < 2)
+		if (m_TotalStepTowardsRabbit < 2)
 		{
-			if (m_MusicManagerScript.GetCurrentMusicTime() > m_Level01MoveTimeArr[m_ArrayCounter])
+			if (m_MusicManagerScript.GetCurrentMusicTime() > m_Level01MoveTimeArr[m_TotalStepTowardsRabbit])
 			{
 				SetLerpPositions();
-				m_ArrayCounter++;
+				m_TotalStepTowardsRabbit++;
 			}
 		}
 
