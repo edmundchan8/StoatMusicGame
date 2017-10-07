@@ -12,21 +12,23 @@ public class LevelManager : MonoBehaviour
 
 	[Header ("Variables")]
 	[SerializeField]
-	int m_CurrentScene;
+	int m_CurrentScene = 1;
+	int m_CurrentLevel;
 	[SerializeField]
 	string m_LevelToLoad;
 
 	//check if levelmanager exist, if it does, destroy, else set this to instance
 	void Awake()
 	{
-		if (instance)
-		{
-			Destroy(gameObject);
-		}
-		else
+		ResetLevelCount();
+		if (!instance)
 		{
 			instance = this;
 			DontDestroyOnLoad(gameObject);
+		}
+		else
+		{
+			Destroy(gameObject);
 		}
 	}
 		
@@ -36,12 +38,27 @@ public class LevelManager : MonoBehaviour
 		if (Time.timeSinceLevelLoad > DURATION_TILL_LOAD && m_CurrentScene == 0)
 		{
 			m_LevelToLoad = "Menu";
-			LoadNextLevel(m_LevelToLoad);
+			LoadNextScene(m_LevelToLoad);
 		}
 	}
 		
-	public void LoadNextLevel(string level)
+	public void LoadNextScene(string level)
 	{	
 		SceneManager.LoadScene(level);
+	}
+
+	public int GetCurrentLevel()
+	{
+		return m_CurrentLevel;
+	}
+
+	public int IncrementLevel()
+	{
+		return m_CurrentLevel++;
+	}
+
+	public void ResetLevelCount()
+	{
+		m_CurrentLevel = 1;
 	}
 }

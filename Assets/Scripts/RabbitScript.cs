@@ -3,16 +3,16 @@ using System.Collections;
 
 public class RabbitScript : MonoBehaviour 
 {
+	[Header("Rabbit Attributes")]
 	[SerializeField]
 	float SPEED = 2f;
 	[SerializeField]
 	float DEATH_DURATION = 4f;
+	bool m_BeginRun = false;
 
 	[Header("Accessor")]
 	GameOverScript m_GameOverScript;
 	Animator m_Animator;
-
-	bool m_BeginRun = false;
 
 	void Start()
 	{
@@ -23,11 +23,6 @@ public class RabbitScript : MonoBehaviour
 
 	void Update()
 	{
-		//DEBUG - remove later
-		if (Input.GetKeyUp(KeyCode.Q))
-		{
-			DestroyAfterTime();
-		}
 		if (m_BeginRun)
 		{
 			transform.Translate(Vector2.right * Time.deltaTime * SPEED);
@@ -46,6 +41,7 @@ public class RabbitScript : MonoBehaviour
 	{
 		FlashCode flash = gameObject.GetComponentInChildren<FlashCode>();
 		flash.SetFlashTimer();
+		DestroyAfterTime();
 	}
 
 	//Consider if we still want this as it causes some conflicts/null reference exceptions later on once destroyed
@@ -58,7 +54,8 @@ public class RabbitScript : MonoBehaviour
 
 	void IncreaseLevelCount()
 	{
-		GameManager.instance.IncrementCurrentLevel();
+		LevelManager.instance.IncrementLevel();
+		GameManager.instance.SetBackgroundLerpPos();
 	}
 
 	public void IsEnteringScene(bool choice)

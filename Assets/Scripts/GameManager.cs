@@ -14,22 +14,25 @@ public class GameManager : MonoBehaviour
 	[SerializeField]
 	MusicManager m_MusicManager;
 	[SerializeField]
-	Timer m_Timer = new Timer();
-	float LERP_DURATION = 4f;
-	[SerializeField]
-	int m_CurrentLevel = 1;
-	Vector2 m_BackgroundPos;
-	Vector2 m_StartLerpPos;
-	[SerializeField]
 	GameObject m_Rabbit;
 	public GameOverScript m_GameOverScript;
-	bool m_CanInstantiateRabbit = true;
 
+	[Header("CONSTANTS")]
+	float LERP_DURATION = 4f;
+
+	[Header("GameManager Variables")]
+	//Make an instance of Gameobject so we can call this from anywhere
+	public static GameManager instance;
+	int m_CurrentLevel;
+	Vector2 m_StartLerpPos;
+	Vector2 m_BackgroundPos;
+	bool m_CanInstantiateRabbit = true;
 	[SerializeField]
 	bool m_Pause = false;
 
-	//Make an instance of Gameobject so we can call this from anywhere
-	public static GameManager instance;
+	[Header("Timer")]
+	[SerializeField]
+	Timer m_Timer = new Timer();
 
 	void Awake()
 	{
@@ -46,6 +49,7 @@ public class GameManager : MonoBehaviour
 
 	void Start () 
 	{
+		m_CurrentLevel = LevelManager.instance.GetCurrentLevel();
 		InstantiateRabbit();
 		m_CanInstantiateRabbit = false;
 		m_PauseCanvas = GameObject.Find("PauseCanvas");
@@ -107,9 +111,9 @@ public class GameManager : MonoBehaviour
 		SceneManager.LoadScene("Menu");
 	}
 
-	public void IncrementCurrentLevel()
+	public void SetBackgroundLerpPos()
 	{
-		m_CurrentLevel++;
+		m_CurrentLevel = LevelManager.instance.GetCurrentLevel();
 		m_StartLerpPos = m_BackgroundPos;
 		m_BackgroundPos.x = GetGameBackgroundPos();
 		m_CanInstantiateRabbit = true;

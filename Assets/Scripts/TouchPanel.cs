@@ -94,6 +94,7 @@ public class TouchPanel : MonoBehaviour
 
 	void Update () 
 	{
+		//TODO To also check if the music is playing too?
 		if (m_Rabbit == null && !m_IsGameOver)
 		{
 			m_Rabbit = GameObject.FindGameObjectWithTag("Rabbit");
