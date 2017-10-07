@@ -49,6 +49,7 @@ public class GameManager : MonoBehaviour
 
 	void Start () 
 	{
+		m_CurrentLevel = LevelManager.instance.GetCurrentLevel();
 		InstantiateRabbit();
 		m_CanInstantiateRabbit = false;
 		m_PauseCanvas = GameObject.Find("PauseCanvas");
@@ -57,7 +58,6 @@ public class GameManager : MonoBehaviour
 		m_BackgroundPos = m_GameBackground.transform.localPosition;
 		m_StartLerpPos = m_BackgroundPos;
 		m_BackgroundPos.x = GetGameBackgroundPos();
-		m_CurrentLevel = LevelManager.instance.GetLevelCurrentLevel();
 	}
 
 	void Update()
@@ -113,7 +113,7 @@ public class GameManager : MonoBehaviour
 
 	public void SetBackgroundLerpPos()
 	{
-		m_CurrentLevel = LevelManager.instance.GetLevelCurrentLevel();
+		m_CurrentLevel = LevelManager.instance.GetCurrentLevel();
 		m_StartLerpPos = m_BackgroundPos;
 		m_BackgroundPos.x = GetGameBackgroundPos();
 		m_CanInstantiateRabbit = true;
