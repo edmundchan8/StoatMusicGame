@@ -74,7 +74,7 @@ public class MusicManager : MonoBehaviour
 
 	void Update() 
 	{
-
+		
 		m_MusicTimer.Update(Time.deltaTime);
 		if (!m_MusicTimer.HasCompleted())
 		{
@@ -107,9 +107,7 @@ public class MusicManager : MonoBehaviour
 				//End of music, stoat jumps to kill rabbit
 				if (m_CanEndLevel)
 				{
-					m_StoatScript.SetLerpPositions();
-					m_StoatScript.MoveCloserRabbit();
-					m_StoatScript.StartCoroutine("Bite");
+					m_StoatScript.EndOfLevel();
 					m_CanEndLevel = false;
 				}
 			}
@@ -143,11 +141,6 @@ public class MusicManager : MonoBehaviour
 		m_MusicTimer.SetTimer(MUSIC_FADE_DURATION);
 	}
 
-	public bool IsGameOver()
-	{ 
-		return m_GameOverText.activeInHierarchy;
-	}
-
 	public void PauseMusic()
 	{
 		m_Audiosource.Pause();
@@ -157,5 +150,15 @@ public class MusicManager : MonoBehaviour
 	{
 		m_Audiosource.Play();
 		SetCanInstantiateTrue();
+	}
+
+	public bool IsGameOver()
+	{ 
+		return m_GameOverText.activeInHierarchy;
+	}
+
+	public bool AudioPlaying()
+	{
+		return m_Audiosource.volume > 0f;
 	}
 }

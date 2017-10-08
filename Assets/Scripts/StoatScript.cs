@@ -10,6 +10,7 @@ public class StoatScript : MonoBehaviour
 	float m_MoveDuration = 4f;
 	float DELAY_BITE_DURATION = 2.5f;
 	Vector2 m_StartPos;
+	Vector2 m_CurrentPos;
 	Vector2 m_EndPos;
 
 	[Header ("Accessor")]
@@ -28,12 +29,13 @@ public class StoatScript : MonoBehaviour
 	[Header ("Stoat Move Attributes")]
 	[SerializeField]
 	float[] m_Level01MoveTimeArr = new float[]{32f, 68f};
-	Timer m_Timer = new Timer();
+	Timer m_StoatTimer = new Timer();
 	int m_TotalStepTowardsRabbit = 0;
 
 	void Start()
 	{
-		m_StartPos = transform.position;
+		m_CurrentPos = transform.position;
+		m_StartPos = m_CurrentPos;
 		m_EndPos = transform.position;
 		m_MusicManagerScript = m_MusicManagerObject.GetComponent<MusicManager>();
 		m_Animator = gameObject.transform.GetChild(0).GetComponent<Animator>();
@@ -57,8 +59,8 @@ public class StoatScript : MonoBehaviour
 		}
 		//Timer is ticking, move closer to rabbit as long as the current array counter is less than 2 and if music time is less than the value in the 
 		//m_Level01TimerArray[ ] , then set the lerp position and increment m_ArrayCounter
-		m_Timer.Update(Time.deltaTime);
-		MoveCloserRabbit();
+		m_StoatTimer.Update(Time.deltaTime);
+		MoveStoat();
 		if (m_TotalStepTowardsRabbit < 2)
 		{
 			if (m_MusicManagerScript.GetCurrentMusicTime() > m_Level01MoveTimeArr[m_TotalStepTowardsRabbit])
@@ -74,16 +76,16 @@ public class StoatScript : MonoBehaviour
 		}
 	}
 
-	public void MoveCloserRabbit() 
+	public void MoveStoat() 
 	{
-		transform.position = Vector2.Lerp(m_StartPos, m_EndPos, (m_MoveDuration - m_Timer.GetTimer()) / m_MoveDuration);
+		transform.position = Vector2.Lerp(m_CurrentPos, m_EndPos, (m_MoveDuration - m_StoatTimer.GetTimer()) / m_MoveDuration);
 	}
 
 	public void SetLerpPositions()
 	{
-		m_StartPos = transform.position;
+		m_CurrentPos = transform.position;
 		m_EndPos = new Vector2(transform.position.x + m_MoveAmount, transform.position.y);
-		m_Timer.SetTimer(m_MoveDuration);
+		m_StoatTimer.SetTimer(m_MoveDuration);
 	}
 
 	IEnumerator Bite()
@@ -100,5 +102,18 @@ public class StoatScript : MonoBehaviour
 		m_CurrentRabbit = GameObject.FindGameObjectWithTag("Rabbit");
 		m_CurrentRabbit.transform.localPosition = startPos;
 		m_RabbitScript = m_CurrentRabbit.GetComponentInChildren<RabbitScript>();
+	}
+
+	public void EndOfLevel()
+	{
+		SetLerpPositions();
+		StartCoroutine("Bite");
+	}
+
+	public void ReturnStartLerpPos()
+	{
+		m_CurrentPos = transform.position;
+		m_EndPos = new Vector2(m_StartPos.x, m_StartPos.y);
+		m_StoatTimer.SetTimer(m_MoveDuration);
 	}
 }

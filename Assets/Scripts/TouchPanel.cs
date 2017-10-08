@@ -51,12 +51,6 @@ public class TouchPanel : MonoBehaviour
 	[SerializeField]
 	GameObject m_Spark;
 
-	[Header ("GitHub code - Remove later?")]
-	[SerializeField]
-	GameObject m_Stoat;
-	[SerializeField]
-	StoatScript m_StoatScript;
-
 	[SerializeField]
 	Text m_ExcellentScore;
 	[SerializeField]
@@ -81,9 +75,6 @@ public class TouchPanel : MonoBehaviour
 	void Start()
 	{
 		m_ComboScript = m_ComboText.GetComponent<ComboScript>();
-		m_ScoreScript = m_ScoreObject.GetComponent<ScoreScript>();
-		m_Stoat = GameObject.Find("Stoat");
-		m_StoatScript = m_Stoat.GetComponent<StoatScript>();
 		//I will remove items from the music list (list that helps instantiate music notes, so I want to create for this script a new unique list
 		m_MusicList = new List<float>();
 		//copy all the values from the musicmanager list to this list
@@ -95,7 +86,7 @@ public class TouchPanel : MonoBehaviour
 	void Update () 
 	{
 		//TODO To also check if the music is playing too?
-		if (m_Rabbit == null && !m_IsGameOver)
+		if (m_Rabbit == null && !m_IsGameOver && m_MusicManager.AudioPlaying())
 		{
 			m_Rabbit = GameObject.FindGameObjectWithTag("Rabbit");
 			m_RabbitScript = m_Rabbit.GetComponent<RabbitScript>();

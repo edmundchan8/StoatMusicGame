@@ -15,6 +15,8 @@ public class GameManager : MonoBehaviour
 	MusicManager m_MusicManager;
 	[SerializeField]
 	GameObject m_Rabbit;
+	[SerializeField]
+	GameObject m_Stoat;
 	public GameOverScript m_GameOverScript;
 
 	[Header("CONSTANTS")]
@@ -116,6 +118,7 @@ public class GameManager : MonoBehaviour
 		m_CurrentLevel = LevelManager.instance.GetCurrentLevel();
 		m_StartLerpPos = m_BackgroundPos;
 		m_BackgroundPos.x = GetGameBackgroundPos();
+		m_Stoat.GetComponent<StoatScript>().ReturnStartLerpPos();
 		m_CanInstantiateRabbit = true;
 	}
 
