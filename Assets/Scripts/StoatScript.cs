@@ -38,7 +38,7 @@ public class StoatScript : MonoBehaviour
 		m_StartPos = m_CurrentPos;
 		m_EndPos = transform.position;
 		m_MusicManagerScript = m_MusicManagerObject.GetComponent<MusicManager>();
-		m_Animator = gameObject.transform.GetChild(0).GetComponent<Animator>();
+		m_Animator = gameObject.transform.GetChild(0).GetComponent<Animator>();	
 		FindRabbit();
 		m_TouchPanel = GameObject.FindGameObjectWithTag("TouchPanel").GetComponent<TouchPanel>();
 	}
@@ -115,5 +115,10 @@ public class StoatScript : MonoBehaviour
 		m_CurrentPos = transform.position;
 		m_EndPos = new Vector2(m_StartPos.x, m_StartPos.y);
 		m_StoatTimer.SetTimer(m_MoveDuration);
+	}
+
+	public void IsMoving()
+	{
+		m_Animator.SetTrigger("isStop");
 	}
 }

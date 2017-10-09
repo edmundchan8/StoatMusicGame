@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour
 	[SerializeField]
 	GameObject m_Stoat;
 	public GameOverScript m_GameOverScript;
+	bool m_IsGameOver = false;
 
 	[Header("CONSTANTS")]
 	float LERP_DURATION = 4f;
@@ -147,6 +148,7 @@ public class GameManager : MonoBehaviour
 	}
 	public GameOverScript ReturnGameOverScript()
 	{
+		m_IsGameOver = true;
 		return m_GameOverScript;
 	}
 
@@ -154,5 +156,15 @@ public class GameManager : MonoBehaviour
 	{
 		m_CanInstantiateRabbit = false;
 		return Instantiate(m_Rabbit, transform.position, transform.rotation) as GameObject;
-	}			
+	}
+
+	public void OnLoseLevel()
+	{
+		m_Stoat.GetComponent<StoatScript>().IsMoving();
+	}
+
+	public bool IsGameOver()
+	{
+		return m_IsGameOver;
+	}
 }
