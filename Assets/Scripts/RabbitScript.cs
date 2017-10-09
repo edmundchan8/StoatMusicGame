@@ -35,6 +35,7 @@ public class RabbitScript : MonoBehaviour
 		m_BeginRun = !m_BeginRun;
 		DestroyAfterTime();
 		m_GameOverScript.SetLoseTextActive();
+		GameManager.instance.OnLoseLevel();
 	}
 
 	public void Bitten()
@@ -54,8 +55,11 @@ public class RabbitScript : MonoBehaviour
 
 	void IncreaseLevelCount()
 	{
-		LevelManager.instance.IncrementLevel();
-		GameManager.instance.SetBackgroundLerpPos();
+		if (!GameManager.instance.IsGameOver())
+		{
+			LevelManager.instance.IncrementLevel();
+			GameManager.instance.SetBackgroundLerpPos();
+		}
 	}
 
 	public void IsEnteringScene(bool choice)
