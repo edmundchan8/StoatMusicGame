@@ -39,7 +39,15 @@ public class GameOverScript : MonoBehaviour
 		gameObject.SetActive(false);
 		m_RestartButton.SetActive(false);
 		m_MenuButton.SetActive(false);
-		m_MusicManager = GameObject.Find("MusicManager").GetComponent<MusicManager>();
+		if (m_MusicManager == null)
+		{
+			m_MusicManager = GameObject.Find("MusicManager").GetComponent<MusicManager>();
+		}
+	}
+
+	void Update()
+	{
+		print(gameObject.name);
 	}
 
 	public void SetLoseTextActive()

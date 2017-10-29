@@ -18,7 +18,10 @@ public class RabbitScript : MonoBehaviour
 	{
 		m_Animator = transform.GetChild(0).GetComponent<Animator>();
 		IsEnteringScene(true);
-		m_GameOverScript = GameManager.instance.ReturnGameOverScript();
+		if (m_GameOverScript == null)
+		{
+			m_GameOverScript = GameManager.instance.ReturnGameOverScript();
+		}
 	}
 
 	void Update()

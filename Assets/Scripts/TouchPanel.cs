@@ -16,6 +16,7 @@ public class TouchPanel : MonoBehaviour
 	bool m_SparkActive = false;
 	[SerializeField]
 	int FAIL_LIMIT = 3;
+	int GAME_SCENE = 2;
 
 	[Header ("Text pop ups")]
 	//Hold the gameobjects that we will use to show the text in the game
@@ -78,74 +79,82 @@ public class TouchPanel : MonoBehaviour
 		//I will remove items from the music list (list that helps instantiate music notes, so I want to create for this script a new unique list
 		m_MusicList = new List<float>();
 		//copy all the values from the musicmanager list to this list
-		m_MusicList.AddRange(m_MusicManager.GetList());
+		//But only if we are on the GameScene
 		//Later on, everytime we check the timing of our input against the music list, remove the timing from our list here.
-		UpdateScoreText();
+		if (LevelManager.instance.GetCurrentScene() == GAME_SCENE)
+		{
+			m_MusicList.AddRange(m_MusicManager.GetList());
+			UpdateScoreText();
+		}
 	}
 
 	void Update () 
 	{
-		//TODO To also check if the music is playing too?
-		if (m_Rabbit == null && !m_IsGameOver && m_MusicManager.AudioPlaying())
+		if (LevelManager.instance.GetCurrentScene() == GAME_SCENE)
 		{
-			m_Rabbit = GameObject.FindGameObjectWithTag("Rabbit");
-			m_RabbitScript = m_Rabbit.GetComponent<RabbitScript>();
-		}
-		m_MusicTime = m_MusicManager.GetCurrentMusicTime();
+			//TODO To also check if the music is playing too?
+			if (m_Rabbit == null && !m_IsGameOver && m_MusicManager.AudioPlaying())
+			{
+				m_Rabbit = GameObject.FindGameObjectWithTag("Rabbit");
+				m_RabbitScript = m_Rabbit.GetComponent<RabbitScript>();
+			}
+			m_MusicTime = m_MusicManager.GetCurrentMusicTime();
 
-		CheckNumberPoors();
-		//TODO: Code here is to play game with keyboard space bar input only, like debug mode
-		if (Input.GetKeyDown(KeyCode.Space))
-		{
-			//for debug purposes, when we hit space, disable the miss detected code
-			CheckMusicAgainstTiming();
-			/*
+			CheckNumberPoors();
+			//TODO: Code here is to play game with keyboard space bar input only, like debug mode
+			if (Input.GetKeyDown(KeyCode.Space))
+			{
+				//for debug purposes, when we hit space, disable the miss detected code
+				CheckMusicAgainstTiming();
+				/*
 			//print(dictionary.Key);
-			//between certain range = excellent
-			if (CheckMusicAgainstTiming() > m_MusicTime - EXCELLENT_MIN_MAX && CheckMusicAgainstTiming() < m_MusicTime + EXCELLENT_MIN_MAX)
-			{
-				print(CheckMusicAgainstTiming() + " MusicMarker");
-				print(m_MusicTime + "Exc");
-				//For each excellent, increase combo by 1
-				m_Combo++;
-				//Increase m_NumExcellents by 1
-				m_NumExcellents++;
-				//Instantiate text alert
-				m_TextResult = m_Excellent.gameObject;
-				InstantiateTextGameObject();
-				return;
+				//between certain range = excellent
+				if (CheckMusicAgainstTiming() > m_MusicTime - EXCELLENT_MIN_MAX && CheckMusicAgainstTiming() < m_MusicTime + EXCELLENT_MIN_MAX)
+				{
+					print(CheckMusicAgainstTiming() + " MusicMarker");
+					print(m_MusicTime + "Exc");
+					//For each excellent, increase combo by 1
+					m_Combo++;
+					//Increase m_NumExcellents by 1
+					m_NumExcellents++;
+					//Instantiate text alert
+					m_TextResult = m_Excellent.gameObject;
+					InstantiateTextGameObject();
+					return;
+				}
+				//between certain range = good
+				else if (CheckMusicAgainstTiming() > (m_MusicTime + EXCELLENT_MIN_MAX) && CheckMusicAgainstTiming() < (m_MusicTime + GOOD_MIN_MAX) || 
+					CheckMusicAgainstTiming() < (m_MusicTime - EXCELLENT_MIN_MAX) && CheckMusicAgainstTiming() > (m_MusicTime - GOOD_MIN_MAX))
+				{
+					print(CheckMusicAgainstTiming() + " MusicMarker");
+					print(m_MusicTime + "Goo");
+					//Reset combo to 0
+					m_Combo = 0;
+					//Increase m_NumGoods by 1
+					m_NumGoods++;
+					//Instantiate text alert
+					m_TextResult = m_Good.gameObject;
+					InstantiateTextGameObject();
+					return;
+				}
+				//Otherwise
+				{
+					print(CheckMusicAgainstTiming() + " MusicMarker");
+					print(m_MusicTime + "poo");
+					//TODO - Poor is being called regardless of touch...
+					//lol, foreach goes through ALL arrays
+					//Reset combo to 0
+					m_Combo = 0;
+					//Increase m_NumPoors by 1
+					m_NumPoors++;
+					//Instantiate text alert
+					m_TextResult = m_Poor.gameObject;
+					InstantiateTextGameObject();
+				}
+				*/
 			}
-			//between certain range = good
-			else if (CheckMusicAgainstTiming() > (m_MusicTime + EXCELLENT_MIN_MAX) && CheckMusicAgainstTiming() < (m_MusicTime + GOOD_MIN_MAX) || 
-				CheckMusicAgainstTiming() < (m_MusicTime - EXCELLENT_MIN_MAX) && CheckMusicAgainstTiming() > (m_MusicTime - GOOD_MIN_MAX))
-			{
-				print(CheckMusicAgainstTiming() + " MusicMarker");
-				print(m_MusicTime + "Goo");
-				//Reset combo to 0
-				m_Combo = 0;
-				//Increase m_NumGoods by 1
-				m_NumGoods++;
-				//Instantiate text alert
-				m_TextResult = m_Good.gameObject;
-				InstantiateTextGameObject();
-				return;
-			}
-			//Otherwise
-			{
-				print(CheckMusicAgainstTiming() + " MusicMarker");
-				print(m_MusicTime + "poo");
-				//TODO - Poor is being called regardless of touch...
-				//lol, foreach goes through ALL arrays
-				//Reset combo to 0
-				m_Combo = 0;
-				//Increase m_NumPoors by 1
-				m_NumPoors++;
-				//Instantiate text alert
-				m_TextResult = m_Poor.gameObject;
-				InstantiateTextGameObject();
-			}
-			*/
 		}
+
 
 		//TODO: code here is for touch input to play with mobile
 		//Comment out for time being.

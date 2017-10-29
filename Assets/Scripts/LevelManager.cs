@@ -13,7 +13,7 @@ public class LevelManager : MonoBehaviour
 	[Header ("Variables")]
 	[SerializeField]
 	int m_CurrentScene = 1;
-	int m_CurrentLevel;
+	int m_CurrentLevel = 1;
 	[SerializeField]
 	string m_LevelToLoad;
 
@@ -34,7 +34,8 @@ public class LevelManager : MonoBehaviour
 		
 	void Update()
 	{
-		m_CurrentScene = SceneManager.GetActiveScene().buildIndex;
+		
+		m_CurrentScene = GetCurrentScene();
 		if (Time.timeSinceLevelLoad > DURATION_TILL_LOAD && m_CurrentScene == 0)
 		{
 			m_LevelToLoad = "Menu";
@@ -50,6 +51,11 @@ public class LevelManager : MonoBehaviour
 	public int GetCurrentLevel()
 	{
 		return m_CurrentLevel;
+	}
+
+	public int GetCurrentScene()
+	{
+		return SceneManager.GetActiveScene().buildIndex;
 	}
 
 	public int IncrementLevel()
