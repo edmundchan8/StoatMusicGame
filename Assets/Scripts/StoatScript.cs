@@ -70,7 +70,7 @@ public class StoatScript : MonoBehaviour
 			}
 		}
 
-		if (!m_CurrentRabbit)
+		if (!m_CurrentRabbit && !GameManager.instance.IsGameOver())
 		{
 			FindRabbit();
 		}

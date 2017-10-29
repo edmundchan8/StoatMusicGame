@@ -57,6 +57,12 @@ public class LevelManager : MonoBehaviour
 		return m_CurrentLevel++;
 	}
 
+	public void RestartLevel(int level)
+	{
+		print("Need to take in which music to play, that will determine which level we are loading.");
+		SceneManager.LoadScene("GameScene");
+	}
+
 	public void ResetLevelCount()
 	{
 		m_CurrentLevel = 1;

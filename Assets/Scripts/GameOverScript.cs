@@ -17,6 +17,11 @@ public class GameOverScript : MonoBehaviour
 	MusicManager m_MusicManager;
 
 	[SerializeField]
+	GameObject m_RestartButton;
+	[SerializeField]
+	GameObject m_MenuButton;
+
+	[SerializeField]
 	Text m_LoseText;
 	[SerializeField]
 	Color m_TextColor;
@@ -32,6 +37,8 @@ public class GameOverScript : MonoBehaviour
 		m_TextColor.a = m_Alpha;
 		m_LoseText.color = m_TextColor;
 		gameObject.SetActive(false);
+		m_RestartButton.SetActive(false);
+		m_MenuButton.SetActive(false);
 		m_MusicManager = GameObject.Find("MusicManager").GetComponent<MusicManager>();
 	}
 
@@ -48,6 +55,8 @@ public class GameOverScript : MonoBehaviour
 			FadeInText();
 			FloatDownText();
 			FadeAudioSound();
+			m_RestartButton.SetActive(true);
+			m_MenuButton.SetActive(true);
 		}
 	}
 
