@@ -167,4 +167,9 @@ public class GameManager : MonoBehaviour
 	{
 		return m_IsGameOver;
 	}
+
+	public void OnRestart()
+	{
+		LevelManager.instance.RestartLevel(LevelManager.instance.GetCurrentLevel());
+	}
 }
