@@ -16,8 +16,6 @@ public class StoatScript : MonoBehaviour
 	[Header ("Accessor")]
 	[SerializeField]
 	GameObject m_MusicManagerObject;
-	[SerializeField]
-	MusicManager m_MusicManagerScript;
 	Animator m_Animator;
 	[SerializeField]
 	RabbitScript m_RabbitScript;
@@ -37,7 +35,6 @@ public class StoatScript : MonoBehaviour
 		m_CurrentPos = transform.position;
 		m_StartPos = m_CurrentPos;
 		m_EndPos = transform.position;
-		m_MusicManagerScript = m_MusicManagerObject.GetComponent<MusicManager>();
 		m_Animator = gameObject.transform.GetChild(0).GetComponent<Animator>();	
 		FindRabbit();
 		m_TouchPanel = GameObject.FindGameObjectWithTag("TouchPanel").GetComponent<TouchPanel>();
@@ -63,7 +60,7 @@ public class StoatScript : MonoBehaviour
 		MoveStoat();
 		if (m_TotalStepTowardsRabbit < 2)
 		{
-			if (m_MusicManagerScript.GetCurrentMusicTime() > m_Level01MoveTimeArr[m_TotalStepTowardsRabbit])
+			if (MusicManager.instance.GetCurrentMusicTime() > m_Level01MoveTimeArr[m_TotalStepTowardsRabbit])
 			{
 				SetLerpPositions();
 				m_TotalStepTowardsRabbit++;

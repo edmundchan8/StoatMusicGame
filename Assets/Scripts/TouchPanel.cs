@@ -40,8 +40,6 @@ public class TouchPanel : MonoBehaviour
 	[SerializeField]
 	ComboScript m_ComboScript;
 	[SerializeField]
-	MusicManager m_MusicManager;
-	[SerializeField]
 	List<float> m_MusicList;
 	[SerializeField]
 	GameObject m_ScoreObject;
@@ -83,7 +81,7 @@ public class TouchPanel : MonoBehaviour
 		//Later on, everytime we check the timing of our input against the music list, remove the timing from our list here.
 		if (LevelManager.instance.GetCurrentScene() == GAME_SCENE)
 		{
-			m_MusicList.AddRange(m_MusicManager.GetList());
+			m_MusicList.AddRange(MusicManager.instance.GetList());
 			UpdateScoreText();
 		}
 	}
@@ -93,12 +91,12 @@ public class TouchPanel : MonoBehaviour
 		if (LevelManager.instance.GetCurrentScene() == GAME_SCENE)
 		{
 			//TODO To also check if the music is playing too?
-			if (m_Rabbit == null && !m_IsGameOver && m_MusicManager.AudioPlaying())
+			if (m_Rabbit == null && !m_IsGameOver && MusicManager.instance.AudioPlaying())
 			{
 				m_Rabbit = GameObject.FindGameObjectWithTag("Rabbit");
 				m_RabbitScript = m_Rabbit.GetComponent<RabbitScript>();
 			}
-			m_MusicTime = m_MusicManager.GetCurrentMusicTime();
+			m_MusicTime = MusicManager.instance.GetCurrentMusicTime();
 
 			CheckNumberPoors();
 			//TODO: Code here is to play game with keyboard space bar input only, like debug mode

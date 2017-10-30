@@ -28,6 +28,7 @@ public class FadeOut : MonoBehaviour
 		m_PanelColor = Color.white;
 		m_Panel.color = m_PanelColor;
 		m_FadeTimer.SetTimer(FADE_DURATION);
+		m_MusicManager = GameObject.FindGameObjectWithTag("MusicManager");
 	}
 
 	void Update()

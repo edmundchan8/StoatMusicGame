@@ -9,8 +9,6 @@ public class CountDown : MonoBehaviour
 	Text m_Text;
 	[SerializeField]
 	AudioSource m_AudioSource;
-	[SerializeField]
-	MusicManager m_MusicManager;
 
 	void Start () 
 	{
@@ -24,7 +22,7 @@ public class CountDown : MonoBehaviour
 		if (m_Timer <= 0)
 		{
 			//Start music
-			m_MusicManager.PlayMusic();
+			MusicManager.instance.PlayMusic();
 			Destroy(this.gameObject);
 		}
 	}

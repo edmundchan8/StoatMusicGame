@@ -12,8 +12,6 @@ public class GameManager : MonoBehaviour
 	[SerializeField]
 	GameObject m_GameBackground;
 	[SerializeField]
-	MusicManager m_MusicManager;
-	[SerializeField]
 	GameObject m_Rabbit;
 	[SerializeField]
 	GameObject m_Stoat;
@@ -56,7 +54,6 @@ public class GameManager : MonoBehaviour
 		InstantiateRabbit();
 		m_CanInstantiateRabbit = false;
 		m_PauseCanvas = GameObject.Find("PauseCanvas");
-		m_MusicManager = GameObject.Find("MusicManager").GetComponent<MusicManager>();
 		m_PauseCanvas.SetActive(m_Pause);
 		m_BackgroundPos = m_GameBackground.transform.localPosition;
 		m_StartLerpPos = m_BackgroundPos;
@@ -98,13 +95,13 @@ public class GameManager : MonoBehaviour
 	public void PauseGameAndMusic()
 	{
 		Time.timeScale = 0f;
-		m_MusicManager.PauseMusic();
+		MusicManager.instance.PauseMusic();
 	}
 
 	public void PlayGameAndMusic()
 	{
 		Time.timeScale = 1f;
-		m_MusicManager.PlayMusic();
+		MusicManager.instance.PlayMusic();
 	}
 
 	//TODO Need to get this to work from Level Manager script instead
