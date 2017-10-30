@@ -22,6 +22,16 @@ public class MusicManager : MonoBehaviour
 	float DELAY_INSTANTIATE_DURATION = 0.1f;
 	float MUSIC_FADE_DURATION = 4f;
 
+	[Header("AudioClips")]
+	[SerializeField]
+	AudioClip MENU_AUDIO;
+	[SerializeField]
+	AudioClip LEVEL1_AUDIO;
+	[SerializeField]
+	AudioClip LEVEL2_AUDIO;
+	[SerializeField]
+	AudioClip LEVEL3_AUDIO;
+
 	[Header ("Music Variables")]
 	public static MusicManager instance;
 	[SerializeField]
@@ -52,8 +62,6 @@ public class MusicManager : MonoBehaviour
 	void Awake()
 	{	
 		m_MusicState = eLevelMusic.Menu;
-		//TODO: Switch statement later.  Depending on the level, set the LEVEL_TEXT To use 
-		m_MusicTimeText = EASY_LEVEL_01.text.Split('\n');
 		m_StoatScript = GameObject.Find("Stoat").GetComponent<StoatScript>();
 	}
 
@@ -80,8 +88,16 @@ public class MusicManager : MonoBehaviour
 
 	void Update() 
 	{
+		if (m_MusicState == eLevelMusic.Menu)
+		{
+			m_Audiosource.clip = MENU_AUDIO;
+		}
+
 		if (m_MusicState == eLevelMusic.Level1)
 		{
+			m_Audiosource.clip = LEVEL1_AUDIO;
+			m_MusicTimeText = EASY_LEVEL_01.text.Split('\n');
+
 			if (m_GameOverText == null)
 			{
 				m_GameOverText = GameObject.FindObjectOfType<GameOverScript>().gameObject;
