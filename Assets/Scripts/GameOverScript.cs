@@ -45,11 +45,6 @@ public class GameOverScript : MonoBehaviour
 		}
 	}
 
-	void Update()
-	{
-		print(gameObject.name);
-	}
-
 	public void SetLoseTextActive()
 	{
 		m_Timer.Update(Time.deltaTime);
