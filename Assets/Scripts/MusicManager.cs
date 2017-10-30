@@ -76,9 +76,6 @@ public class MusicManager : MonoBehaviour
 		{
 			Destroy(instance);
 		}
-			
-		m_GameOverText = GameObject.FindObjectOfType<GameOverScript>().gameObject;
-
 		//At the start of the game, put all values from the EASY_LEVEL_01 into the List for m_MusicPlayTimeList
 		for (int i = 0; i < m_MusicTimeText.Length; i++)
 		{
@@ -93,10 +90,13 @@ public class MusicManager : MonoBehaviour
 			m_Audiosource.clip = MENU_AUDIO;
 		}
 
-		if (m_MusicState == eLevelMusic.Level1)
+		if (m_MusicState != eLevelMusic.Menu)
 		{
-			m_Audiosource.clip = LEVEL1_AUDIO;
-			m_MusicTimeText = EASY_LEVEL_01.text.Split('\n');
+			if (m_MusicState == eLevelMusic.Level1)
+			{
+				m_Audiosource.clip = LEVEL1_AUDIO;
+				m_MusicTimeText = EASY_LEVEL_01.text.Split('\n');
+			}
 
 			if (m_GameOverText == null)
 			{
@@ -141,6 +141,7 @@ public class MusicManager : MonoBehaviour
 				}
 			}
 		}
+
 	}
 
 	public void SetCanInstantiateTrue () 
