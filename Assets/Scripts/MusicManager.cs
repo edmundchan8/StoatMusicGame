@@ -54,15 +54,14 @@ public class MusicManager : MonoBehaviour
 
 	public enum eLevelMusic
 	{
-		Menu, Level1, Level2, Level3
+		Splash, Menu, Level1, Level2, Level3
 	};
 
 	private eLevelMusic m_MusicState;
 
 	void Awake()
 	{	
-		m_MusicState = eLevelMusic.Menu;
-		m_StoatScript = GameObject.Find("Stoat").GetComponent<StoatScript>();
+		m_MusicState = eLevelMusic.Splash;
 	}
 
 	void Start()
@@ -85,13 +84,24 @@ public class MusicManager : MonoBehaviour
 
 	void Update() 
 	{
+		if (LevelManager.instance.GetCurrentScene() == 1)
+		{
+			m_MusicState = eLevelMusic.Menu;
+		}
+
 		if (m_MusicState == eLevelMusic.Menu)
 		{
 			m_Audiosource.clip = MENU_AUDIO;
+			if (!m_Audiosource.isPlaying)
+			{
+				print(m_Audiosource.isPlaying);
+				m_Audiosource.PlayOneShot(m_Audiosource.clip);
+			}
 		}
 
-		if (m_MusicState != eLevelMusic.Menu)
+		if (m_MusicState != eLevelMusic.Menu && m_MusicState != eLevelMusic.Splash)
 		{
+			m_StoatScript = GameObject.Find("Stoat").GetComponent<StoatScript>();
 			if (m_MusicState == eLevelMusic.Level1)
 			{
 				m_Audiosource.clip = LEVEL1_AUDIO;
@@ -100,6 +110,7 @@ public class MusicManager : MonoBehaviour
 
 			if (m_GameOverText == null)
 			{
+				print("no gameover");
 				m_GameOverText = GameObject.FindObjectOfType<GameOverScript>().gameObject;
 			}
 
