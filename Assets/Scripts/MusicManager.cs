@@ -52,6 +52,8 @@ public class MusicManager : MonoBehaviour
 	bool m_CanInstantiateNote = false;
 	bool m_CanEndLevel = true;
 
+	bool m_SetLevel1Music = true;
+
 	public enum eLevelMusic
 	{
 		Splash, Menu, Level1, Level2, Level3
@@ -74,11 +76,6 @@ public class MusicManager : MonoBehaviour
 		else
 		{
 			Destroy(instance);
-		}
-		//At the start of the game, put all values from the EASY_LEVEL_01 into the List for m_MusicPlayTimeList
-		for (int i = 0; i < m_MusicTimeText.Length; i++)
-		{
-			m_MusicPlayTimeList.Add(float.Parse(m_MusicTimeText[i]));
 		}
 	}
 
@@ -110,52 +107,67 @@ public class MusicManager : MonoBehaviour
 			{
 				m_Audiosource.clip = LEVEL1_AUDIO;
 				m_MusicTimeText = EASY_LEVEL_01.text.Split('\n');
-			}
-
-			if (m_GameOverScript == null)
-			{
-				m_GameOverScript = GameManager.instance.m_GameOverScript;
-			}
-
-			m_MusicTimer.Update(Time.deltaTime);
-			if (!m_MusicTimer.HasCompleted())
-			{
-				m_Audiosource.volume *= m_MusicTimer.GetTimer()/MUSIC_FADE_DURATION;
-			}
-
-			float audioTime = m_Audiosource.time;
-
-			if (m_CanInstantiateNote && !IsGameOver())
-			{
-				//n.b. music note takes 2.4f seconds to get to target from instantiate point.
-				if (m_NoteIndexToPlay < m_MusicTimeText.Length)
+				//At the start of the game, put all values from the EASY_LEVEL_01 into the List for m_MusicPlayTimeList
+				if(m_SetLevel1Music)
 				{
-					//take current music time to check against from the music list, minus instantiate offset time, convert to 2 decimal places
-					float InstantiateMusicNoteTime = (m_MusicPlayTimeList[m_NoteIndexToPlay] - NOTE_INSTANTIATE_OFFSET);
-					//round the current audio time to 2 decimal places, then output to 2 decimal places
-					float RoundedCurrentAudioTime = (float)System.Math.Round(audioTime, 2);
-
-					//Comparing both STRINGS from above
-					if (RoundedCurrentAudioTime >= InstantiateMusicNoteTime)
+					for (int i = 0; i < m_MusicTimeText.Length; i++)
 					{
-						m_NoteIndexToPlay++;
-						InstantiateMusicNotes();
-						//This is not good, need to fix this as it is causinng very close music taps to not instantiate
-						Invoke("SetCanInstantiateTrue", DELAY_INSTANTIATE_DURATION);
+						m_MusicPlayTimeList.Add(float.Parse(m_MusicTimeText[i]));
 					}
-				}
-				else if (m_NoteIndexToPlay >= m_MusicTimeText.Length)
-				{
-					//End of music, stoat jumps to kill rabbit
-					if (m_CanEndLevel)
-					{
-						m_StoatScript.EndOfLevel();
-						m_CanEndLevel = false;
-					}
-				}
+					m_SetLevel1Music = false;
+					GameObject touchPanel = GameObject.FindGameObjectWithTag("TouchPanel");
+					touchPanel.GetComponent<TouchPanel>().SetMusicList(m_MusicPlayTimeList);
+				}	
 			}
 		}
 
+		if (m_GameOverScript == null)
+		{
+			m_GameOverScript = GameManager.instance.m_GameOverScript;
+		}
+
+		if (m_NoteInstantiatePosition == null)
+		{
+			m_NoteInstantiatePosition = GameManager.instance.GetNoteInstantiatePos();
+		}
+
+		m_MusicTimer.Update(Time.deltaTime);
+		if (!m_MusicTimer.HasCompleted())
+		{
+			m_Audiosource.volume *= m_MusicTimer.GetTimer()/MUSIC_FADE_DURATION;
+		}
+
+		float audioTime = m_Audiosource.time;
+
+		if (m_CanInstantiateNote && !IsGameOver())
+		{
+			//n.b. music note takes 2.4f seconds to get to target from instantiate point.
+			if (m_NoteIndexToPlay < m_MusicTimeText.Length)
+			{
+				//take current music time to check against from the music list, minus instantiate offset time, convert to 2 decimal places
+				float InstantiateMusicNoteTime = (m_MusicPlayTimeList[m_NoteIndexToPlay] - NOTE_INSTANTIATE_OFFSET);
+				//round the current audio time to 2 decimal places, then output to 2 decimal places
+				float RoundedCurrentAudioTime = (float)System.Math.Round(audioTime, 2);
+
+				//Comparing both STRINGS from above
+				if (RoundedCurrentAudioTime >= InstantiateMusicNoteTime)
+				{
+					m_NoteIndexToPlay++;
+					InstantiateMusicNotes();
+					//This is not good, need to fix this as it is causinng very close music taps to not instantiate
+					Invoke("SetCanInstantiateTrue", DELAY_INSTANTIATE_DURATION);
+				}
+			}
+			else if (m_NoteIndexToPlay >= m_MusicTimeText.Length)
+			{
+				//End of music, stoat jumps to kill rabbit
+				if (m_CanEndLevel)
+				{
+					m_StoatScript.EndOfLevel();
+					m_CanEndLevel = false;
+				}
+			}
+		}
 	}
 
 	public void SetCanInstantiateTrue () 
@@ -175,6 +187,7 @@ public class MusicManager : MonoBehaviour
 		return m_Audiosource.time;
 	}
 
+	//TODO:Unsure if still needed.  Now, our game will create the music list then send it to the touchpanel script.
 	public List<float> GetList()
 	{
 		return m_MusicPlayTimeList;

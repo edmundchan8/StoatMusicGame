@@ -17,6 +17,8 @@ public class GameManager : MonoBehaviour
 	GameObject m_Stoat;
 	public GameOverScript m_GameOverScript;
 	bool m_IsGameOver = false;
+	[SerializeField]
+	GameObject m_NoteHolder;
 
 	[Header("CONSTANTS")]
 	float LERP_DURATION = 4f;
@@ -168,5 +170,10 @@ public class GameManager : MonoBehaviour
 	public void OnRestart()
 	{
 		LevelManager.instance.RestartLevel(LevelManager.instance.GetCurrentLevel());
+	}
+
+	public GameObject GetNoteInstantiatePos()
+	{
+		return m_NoteHolder;
 	}
 }

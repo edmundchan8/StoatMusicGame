@@ -73,15 +73,16 @@ public class TouchPanel : MonoBehaviour
 
 	void Start()
 	{
+		//TODO: will need to run this each time there is a new music level
 		m_ComboScript = m_ComboText.GetComponent<ComboScript>();
 		//I will remove items from the music list (list that helps instantiate music notes, so I want to create for this script a new unique list
 		m_MusicList = new List<float>();
 		//copy all the values from the musicmanager list to this list
 		//But only if we are on the GameScene
 		//Later on, everytime we check the timing of our input against the music list, remove the timing from our list here.
+		//TODO : This should add the current level music list, dependent on the level of the game
 		if (LevelManager.instance.GetCurrentScene() == GAME_SCENE)
 		{
-			m_MusicList.AddRange(MusicManager.instance.GetList());
 			UpdateScoreText();
 		}
 	}
@@ -100,7 +101,7 @@ public class TouchPanel : MonoBehaviour
 
 			CheckNumberPoors();
 			//TODO: Code here is to play game with keyboard space bar input only, like debug mode
-			if (Input.GetKeyDown(KeyCode.Space))
+			if (Input.GetButtonDown("Space"))
 			{
 				//for debug purposes, when we hit space, disable the miss detected code
 				CheckMusicAgainstTiming();
@@ -265,9 +266,13 @@ public class TouchPanel : MonoBehaviour
 		//make note of time which you touched screen
 		//plus an offset
 		float hitTime = m_MusicTime;
+
+
 		//go through list 
 		for (int i = 0; i < m_MusicList.Count; i++)
 		{
+			print(i + " i");
+			print(m_MusicList[i] + " list "+ i);
 			if (hitTime > m_MusicList[i] - EXCELLENT_MIN_MAX && hitTime < m_MusicList[i] + EXCELLENT_MIN_MAX)
 			{
 				m_ComboScript.IncreaseCombo(1);
@@ -331,5 +336,10 @@ public class TouchPanel : MonoBehaviour
 		m_Spark.gameObject.SetActive(true);
 		yield return new WaitForSeconds(0.15f);
 		m_Spark.gameObject.SetActive(false);
+	}
+
+	public void SetMusicList(List<float> list)
+	{
+		m_MusicList = list;
 	}
 }
