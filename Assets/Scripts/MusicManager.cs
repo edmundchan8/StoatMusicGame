@@ -11,7 +11,7 @@ public class MusicManager : MonoBehaviour
 	[SerializeField]
 	AudioSource m_Audiosource;
 	[SerializeField]
-	GameObject m_GameOverText;
+	GameOverScript m_GameOverScript;
 	[SerializeField]
 	StoatScript m_StoatScript;
 
@@ -88,13 +88,17 @@ public class MusicManager : MonoBehaviour
 		{
 			m_MusicState = eLevelMusic.Menu;
 		}
+		else if (LevelManager.instance.GetCurrentScene() == 2)
+		{
+			m_MusicState = eLevelMusic.Level1;
+		}
+
 
 		if (m_MusicState == eLevelMusic.Menu)
 		{
 			m_Audiosource.clip = MENU_AUDIO;
 			if (!m_Audiosource.isPlaying)
 			{
-				print(m_Audiosource.isPlaying);
 				m_Audiosource.PlayOneShot(m_Audiosource.clip);
 			}
 		}
@@ -108,10 +112,9 @@ public class MusicManager : MonoBehaviour
 				m_MusicTimeText = EASY_LEVEL_01.text.Split('\n');
 			}
 
-			if (m_GameOverText == null)
+			if (m_GameOverScript == null)
 			{
-				print("no gameover");
-				m_GameOverText = GameObject.FindObjectOfType<GameOverScript>().gameObject;
+				m_GameOverScript = GameManager.instance.m_GameOverScript;
 			}
 
 			m_MusicTimer.Update(Time.deltaTime);
@@ -193,9 +196,14 @@ public class MusicManager : MonoBehaviour
 		SetCanInstantiateTrue();
 	}
 
+	public void StopMusic()
+	{
+		m_Audiosource.Stop();
+	}
+
 	public bool IsGameOver()
 	{ 
-		return m_GameOverText.activeInHierarchy;
+		return m_GameOverScript.gameObject.activeInHierarchy;
 	}
 
 	public bool AudioPlaying()

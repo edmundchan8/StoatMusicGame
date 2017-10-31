@@ -45,6 +45,7 @@ public class LevelManager : MonoBehaviour
 		
 	public void LoadNextScene(string level)
 	{	
+		MusicManager.instance.StopMusic();
 		SceneManager.LoadScene(level);
 	}
 
