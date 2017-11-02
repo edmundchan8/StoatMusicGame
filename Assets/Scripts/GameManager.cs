@@ -147,7 +147,6 @@ public class GameManager : MonoBehaviour
 	}
 	public GameOverScript ReturnGameOverScript()
 	{
-		m_IsGameOver = true;
 		return m_GameOverScript;
 	}
 
@@ -159,7 +158,18 @@ public class GameManager : MonoBehaviour
 
 	public void OnLoseLevel()
 	{
-		m_Stoat.GetComponent<StoatScript>().IsMoving();
+		GameOver();
+		m_Stoat.GetComponent<StoatScript>().StopMoving();
+	}
+
+	public void GameOver()
+	{
+		m_IsGameOver = true;
+	}
+
+	public void NewGame()
+	{
+		m_IsGameOver = false;
 	}
 
 	public bool IsGameOver()
@@ -175,5 +185,10 @@ public class GameManager : MonoBehaviour
 	public GameObject GetNoteInstantiatePos()
 	{
 		return m_NoteHolder;
+	}
+
+	public bool IsGamePaused()
+	{
+		return m_Pause;
 	}
 }

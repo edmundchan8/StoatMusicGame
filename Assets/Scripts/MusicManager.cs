@@ -138,7 +138,7 @@ public class MusicManager : MonoBehaviour
 
 		float audioTime = m_Audiosource.time;
 
-		if (m_CanInstantiateNote && !IsGameOver())
+		if (m_CanInstantiateNote && !GameManager.instance.IsGameOver())
 		{
 			//n.b. music note takes 2.4f seconds to get to target from instantiate point.
 			if (m_NoteIndexToPlay < m_MusicTimeText.Length)
@@ -210,11 +210,6 @@ public class MusicManager : MonoBehaviour
 	public void StopMusic()
 	{
 		m_Audiosource.Stop();
-	}
-
-	public bool IsGameOver()
-	{ 
-		return m_GameOverScript.gameObject.activeInHierarchy;
 	}
 
 	public bool AudioPlaying()

@@ -44,7 +44,7 @@ public class StoatScript : MonoBehaviour
 	{
 		//TODO - might need to reword this.  When rabbit is destroy, this will still check.
 		//Should probably say, if rabbit is not destroyed && pos.x  >2.1f && is not gameover.
-		if (m_CurrentRabbit != null && m_CurrentRabbit.transform.position.x > 2.1f && !m_TouchPanel.m_IsGameOver)
+		if (m_CurrentRabbit != null && m_CurrentRabbit.transform.position.x > 2.1f && !GameManager.instance.IsGameOver())
 		{
 			Vector2 pos = m_CurrentRabbit.transform.position;
 			pos.x -= Time.deltaTime;
@@ -114,7 +114,7 @@ public class StoatScript : MonoBehaviour
 		m_StoatTimer.SetTimer(m_MoveDuration);
 	}
 
-	public void IsMoving()
+	public void StopMoving()
 	{
 		m_Animator.SetTrigger("isStop");
 	}

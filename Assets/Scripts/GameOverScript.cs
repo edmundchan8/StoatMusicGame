@@ -13,8 +13,6 @@ public class GameOverScript : MonoBehaviour
 	[Header ("Accessor")]
 	[SerializeField]
 	Timer m_Timer;
-	[SerializeField]
-	MusicManager m_MusicManager;
 
 	[SerializeField]
 	GameObject m_RestartButton;
@@ -36,12 +34,17 @@ public class GameOverScript : MonoBehaviour
 		m_TextColor = m_LoseText.color;
 		m_TextColor.a = m_Alpha;
 		m_LoseText.color = m_TextColor;
-		gameObject.SetActive(false);
 		m_RestartButton.SetActive(false);
 		m_MenuButton.SetActive(false);
-		if (m_MusicManager == null)
+	}
+
+	void Update ()
+	{
+		print(GameManager.instance.IsGameOver());
+		if (gameObject.activeInHierarchy && !GameManager.instance.IsGameOver())
 		{
-			m_MusicManager = GameObject.Find("MusicManager").GetComponent<MusicManager>();
+			print("set gameobject false " + gameObject.name);
+			gameObject.SetActive(false);
 		}
 	}
 
@@ -54,6 +57,7 @@ public class GameOverScript : MonoBehaviour
 		}
 		if (m_TextColor.a != 1f)
 		{
+			print(m_RestartButton.gameObject);
 			gameObject.SetActive(true);
 			FadeInText();
 			FloatDownText();
@@ -78,6 +82,6 @@ public class GameOverScript : MonoBehaviour
 
 	void FadeAudioSound()
 	{
-		m_MusicManager.FadeOutMusic();
+		MusicManager.instance.FadeOutMusic();
 	}
 }
