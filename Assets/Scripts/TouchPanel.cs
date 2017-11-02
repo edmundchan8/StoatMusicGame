@@ -9,14 +9,14 @@ public class TouchPanel : MonoBehaviour
 	bool m_IsPressed = false;
 
 	[Header("Constants")]
-	[SerializeField]
-	float EXCELLENT_MIN_MAX = 0.13f;
-	[SerializeField]
-	float GOOD_MIN_MAX = 0.25f;
 	bool m_SparkActive = false;
 	[SerializeField]
 	int FAIL_LIMIT = 3;
 	int GAME_SCENE = 2;
+	[SerializeField]
+	float EXCELLENT_MIN_MAX = 0.13f;
+	[SerializeField]
+	float GOOD_MIN_MAX = 0.25f;
 
 	[Header ("Text pop ups")]
 	//Hold the gameobjects that we will use to show the text in the game
@@ -49,6 +49,8 @@ public class TouchPanel : MonoBehaviour
 	GameObject m_Rabbit;
 	[SerializeField]
 	GameObject m_Spark;
+
+	float m_MusicTimingHolder = 0f;
 
 	[SerializeField]
 	Text m_ExcellentScore;
@@ -260,44 +262,67 @@ public class TouchPanel : MonoBehaviour
 	{
 		m_ComboScript.ResetCombo();
 	}
-
+		
 	void CheckMusicAgainstTiming () 
 	{
 		//make note of time which you touched screen
 		//plus an offset
 		float hitTime = m_MusicTime;
 
-
 		//go through list 
 		for (int i = 0; i < m_MusicList.Count; i++)
 		{
-			print(i + " i");
-			print(m_MusicList[i] + " list "+ i);
 			if (hitTime > m_MusicList[i] - EXCELLENT_MIN_MAX && hitTime < m_MusicList[i] + EXCELLENT_MIN_MAX)
 			{
-				m_ComboScript.IncreaseCombo(1);
-				m_NumExcellents++;
-				m_ScoreScript.IncreaseScore(100);
-				UpdateScoreText();
-				m_TextResult = m_Excellent.gameObject;
-				InstantiateTextGameObject();
-				//Remove the timing that we checked just now from the list
-				//There was an error before where, if the timings were too close together (2.5f, 2.7f, 2.9f), the timing wouldn't know which to test against.
-				//By removing a timing from the list, the code won't retest a timing we have tried before.
-				m_MusicList.Remove(m_MusicList[i]);
-				StartCoroutine("ToggleTouchPanelSpark");
-				return;
+				//have a float variable set to 0
+				//lets store the current m_MusicList[i] on this variable when checkMusicAgainstTiming() occurs
+				//if they are the same, just return
+				//print statement to test if the same touch has been made
+				//else if m_MusicList[i] != variable, carry out the rest of the code
+
+				if (m_MusicTimingHolder == m_MusicList[i])
+				{
+					return;
+				}
+				else
+				{
+					m_MusicTimingHolder = m_MusicList[i];
+					m_ComboScript.IncreaseCombo(1);
+					m_NumExcellents++;
+					m_ScoreScript.IncreaseScore(100);
+					UpdateScoreText();
+					m_TextResult = m_Excellent.gameObject;
+					InstantiateTextGameObject();
+					//Remove the timing that we checked just now from the list
+					//There was an error before where, if the timings were too close together (2.5f, 2.7f, 2.9f), the timing wouldn't know which to test against.
+					//By removing a timing from the list, the code won't retest a timing we have tried before.
+					//TODO When we check music timing, its causing the m_NotesIndexToPlay variable to not instantiate
+					//It feels like this is actually removing the indexes from the actual list
+					//Need to figure out another way to hold these value and use it for the current code
+					//Or to rethink and rewrite this part of the code.
+
+					StartCoroutine("ToggleTouchPanelSpark");
+					return;
+				} 
 			}
 			else if (hitTime > m_MusicList[i] - GOOD_MIN_MAX && hitTime < m_MusicList[i] + GOOD_MIN_MAX)
 			{
-				m_ComboScript.IncreaseCombo(1);
-				m_NumGoods++;				
-				m_ScoreScript.IncreaseScore(10);
-				UpdateScoreText();
-				m_TextResult = m_Good.gameObject;
-				InstantiateTextGameObject();
-				m_MusicList.Remove(m_MusicList[i]);
-				return;
+				if (m_MusicTimingHolder == m_MusicList[i])
+				{
+					print("time holder == m_MusicList[" + i + "]");
+					return;
+				}
+				else
+				{
+					m_MusicTimingHolder = m_MusicList[i];
+					m_ComboScript.IncreaseCombo(1);
+					m_NumGoods++;				
+					m_ScoreScript.IncreaseScore(10);
+					UpdateScoreText();
+					m_TextResult = m_Good.gameObject;
+					InstantiateTextGameObject();
+					return;
+				}
 			}
 
 			else
@@ -341,5 +366,10 @@ public class TouchPanel : MonoBehaviour
 	public void SetMusicList(List<float> list)
 	{
 		m_MusicList = list;
+	}
+
+	public void ResetMusicVariables()
+	{
+		m_MusicTimingHolder = 0f;
 	}
 }

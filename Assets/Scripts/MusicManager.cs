@@ -18,8 +18,7 @@ public class MusicManager : MonoBehaviour
 	[Header ("Music Constants")]
 	//Because the instantiate gameobject is further away from where we want the touch the note, instantiate the music note 2.6f early.
 	float NOTE_INSTANTIATE_OFFSET = 2.6f;
-	[SerializeField]
-	float DELAY_INSTANTIATE_DURATION = 0.1f;
+	float DELAY_INSTANTIATE_DURATION = 0.3f;
 	float MUSIC_FADE_DURATION = 4f;
 
 	[Header("AudioClips")]
@@ -148,7 +147,6 @@ public class MusicManager : MonoBehaviour
 				float InstantiateMusicNoteTime = (m_MusicPlayTimeList[m_NoteIndexToPlay] - NOTE_INSTANTIATE_OFFSET);
 				//round the current audio time to 2 decimal places, then output to 2 decimal places
 				float RoundedCurrentAudioTime = (float)System.Math.Round(audioTime, 2);
-
 				//Comparing both STRINGS from above
 				if (RoundedCurrentAudioTime >= InstantiateMusicNoteTime)
 				{
