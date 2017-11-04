@@ -63,7 +63,6 @@ public class TouchPanel : MonoBehaviour
 	[SerializeField]
 	float m_MusicTime;
 
-	//TODO remove 
 	[Header ("Counters")]
 	int m_NumExcellents = 0;
 	int m_NumGoods = 0;

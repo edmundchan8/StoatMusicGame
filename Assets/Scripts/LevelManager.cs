@@ -67,6 +67,7 @@ public class LevelManager : MonoBehaviour
 	public void RestartLevel(int level)
 	{
 		print("Need to take in which music to play, that will determine which level we are loading.");
+		GameManager.instance.NewGame();
 		SceneManager.LoadScene("GameScene");
 	}
 

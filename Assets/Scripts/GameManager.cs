@@ -7,17 +7,13 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour 
 {
 	[Header ("Accessor")]
-	[SerializeField]
 	GameObject m_PauseCanvas;
-	[SerializeField]
 	GameObject m_GameBackground;
 	[SerializeField]
 	GameObject m_Rabbit;
-	[SerializeField]
 	GameObject m_Stoat;
 	public GameOverScript m_GameOverScript;
 	bool m_IsGameOver = false;
-	[SerializeField]
 	GameObject m_NoteHolder;
 
 	[Header("CONSTANTS")]
@@ -30,8 +26,8 @@ public class GameManager : MonoBehaviour
 	Vector2 m_StartLerpPos;
 	Vector2 m_BackgroundPos;
 	bool m_CanInstantiateRabbit = true;
-	[SerializeField]
 	bool m_Pause = false;
+	bool m_NewLevel = true;
 
 	[Header("Timer")]
 	[SerializeField]
@@ -46,38 +42,62 @@ public class GameManager : MonoBehaviour
 		}
 		else
 		{
-			Destroy(instance);
+			Destroy(this.gameObject);
 		}
-	}
-
-	void Start () 
-	{
-		m_CurrentLevel = LevelManager.instance.GetCurrentLevel();
-		InstantiateRabbit();
-		m_CanInstantiateRabbit = false;
-		m_PauseCanvas = GameObject.Find("PauseCanvas");
-		m_PauseCanvas.SetActive(m_Pause);
-		m_BackgroundPos = m_GameBackground.transform.localPosition;
-		m_StartLerpPos = m_BackgroundPos;
-		m_BackgroundPos.x = GetGameBackgroundPos();
 	}
 
 	void Update()
 	{
+		if (m_NewLevel)
+		{
+			SetNewLevel();
+		}
+
 		m_Timer.Update(Time.deltaTime);
 		if (!m_Timer.HasCompleted() && m_CanInstantiateRabbit)
 		{
 			m_GameBackground.transform.localPosition = Vector2.Lerp(m_StartLerpPos, m_BackgroundPos, (LERP_DURATION - m_Timer.GetTimer()) / LERP_DURATION);
 		}
 
-		if (m_Timer.HasCompleted())
+		if (m_Timer.HasCompleted() && !IsGameOver())
 		{
 			if (m_CanInstantiateRabbit)
 			{
 				InstantiateRabbit();
-				m_CanInstantiateRabbit = false;
 			}
 		}
+	}
+
+	public void SetNewLevel()
+	{		
+		if (GameObject.FindGameObjectWithTag("Rabbit") == null)
+		{
+			m_CanInstantiateRabbit = true;
+			print("can instantiate Rabbit");
+		}
+		if (m_Stoat == null)
+		{
+			m_Stoat = GameObject.FindGameObjectWithTag("Stoat");
+		}
+		m_CurrentLevel = LevelManager.instance.GetCurrentLevel();
+		m_PauseCanvas = GameObject.FindGameObjectWithTag("PauseCanvas");
+		m_PauseCanvas.SetActive(m_Pause);
+		//Set all the objects in m_PauseCanvas to be false
+
+
+		if (m_GameOverScript == null)
+		{
+			m_GameOverScript = ReturnGameOverScript();
+		}
+		if(m_NoteHolder == null)
+		{
+			m_NoteHolder = GameObject.FindGameObjectWithTag("NoteHolder");
+		}
+		m_GameBackground = GameObject.FindGameObjectWithTag("GameBackGround");
+		m_BackgroundPos = m_GameBackground.transform.localPosition;
+		m_StartLerpPos = m_BackgroundPos;
+		m_BackgroundPos.x = GetGameBackgroundPos();
+		m_NewLevel = false;
 	}
 
 	public void OnPause()
@@ -180,6 +200,7 @@ public class GameManager : MonoBehaviour
 	public void OnRestart()
 	{
 		LevelManager.instance.RestartLevel(LevelManager.instance.GetCurrentLevel());
+		m_NewLevel = true;
 	}
 
 	public GameObject GetNoteInstantiatePos()

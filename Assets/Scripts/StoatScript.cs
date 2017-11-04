@@ -95,10 +95,16 @@ public class StoatScript : MonoBehaviour
 
 	public void FindRabbit()
 	{
-		Vector2 startPos = new Vector2(4, 0);
-		m_CurrentRabbit = GameObject.FindGameObjectWithTag("Rabbit");
-		m_CurrentRabbit.transform.localPosition = startPos;
-		m_RabbitScript = m_CurrentRabbit.GetComponentInChildren<RabbitScript>();
+		if (GameManager.instance.InstantiateRabbit() != null)
+		{
+			m_CurrentRabbit = GameObject.FindGameObjectWithTag("Rabbit");
+			Vector2 startPos = m_CurrentRabbit.transform.localPosition;
+			startPos = new Vector2(4, 0);
+			m_CurrentRabbit.transform.localPosition = startPos;
+			m_RabbitScript = m_CurrentRabbit.GetComponentInChildren<RabbitScript>();
+		}
+		else
+			print("can't find rabbit yet");
 	}
 
 	public void EndOfLevel()

@@ -40,10 +40,8 @@ public class GameOverScript : MonoBehaviour
 
 	void Update ()
 	{
-		print(GameManager.instance.IsGameOver());
 		if (gameObject.activeInHierarchy && !GameManager.instance.IsGameOver())
 		{
-			print("set gameobject false " + gameObject.name);
 			gameObject.SetActive(false);
 		}
 	}
@@ -57,7 +55,6 @@ public class GameOverScript : MonoBehaviour
 		}
 		if (m_TextColor.a != 1f)
 		{
-			print(m_RestartButton.gameObject);
 			gameObject.SetActive(true);
 			FadeInText();
 			FloatDownText();
