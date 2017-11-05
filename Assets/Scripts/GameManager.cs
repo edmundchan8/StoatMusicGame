@@ -2,7 +2,7 @@
 using System.Collections;
 //TODO Need to get this to work from Level Manager script instead
 using UnityEngine.SceneManagement;
-
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour 
 {
@@ -15,6 +15,11 @@ public class GameManager : MonoBehaviour
 	public GameOverScript m_GameOverScript;
 	bool m_IsGameOver = false;
 	GameObject m_NoteHolder;
+
+	[Header ("Buttons")]
+	GameObject m_PauseButton;
+	GameObject m_ReturnGameButton;
+	GameObject m_ReturnMenuButton;
 
 	[Header("CONSTANTS")]
 	float LERP_DURATION = 4f;
@@ -70,10 +75,10 @@ public class GameManager : MonoBehaviour
 
 	public void SetNewLevel()
 	{		
+		m_NewLevel = false;
 		if (GameObject.FindGameObjectWithTag("Rabbit") == null)
 		{
 			m_CanInstantiateRabbit = true;
-			print("can instantiate Rabbit");
 		}
 		if (m_Stoat == null)
 		{
@@ -81,10 +86,26 @@ public class GameManager : MonoBehaviour
 		}
 		m_CurrentLevel = LevelManager.instance.GetCurrentLevel();
 		m_PauseCanvas = GameObject.FindGameObjectWithTag("PauseCanvas");
-		m_PauseCanvas.SetActive(m_Pause);
 		//Set all the objects in m_PauseCanvas to be false
+		if(m_PauseButton == null)
+		{
+			print("found pause button");
+			m_PauseButton = GameObject.FindGameObjectWithTag("PauseButton");
+		}
+		if (m_ReturnGameButton == null)
+		{
+			m_ReturnGameButton = GameObject.FindGameObjectWithTag("ReturnGameButton");
+		}
 
-
+		if (m_ReturnMenuButton == null)
+		{
+			m_ReturnMenuButton = GameObject.FindGameObjectWithTag("MenuButton");
+		}
+		m_PauseButton.GetComponent<Button>().onClick.AddListener(() => OnPause());
+		m_ReturnGameButton.GetComponent<Button>().onClick.AddListener(() => OnPause());
+		m_ReturnMenuButton.GetComponent<Button>().onClick.AddListener(() => ReturnToTitle());
+		m_PauseCanvas.SetActive(m_Pause);
+		print(m_PauseCanvas.activeInHierarchy);
 		if (m_GameOverScript == null)
 		{
 			m_GameOverScript = ReturnGameOverScript();
@@ -97,7 +118,6 @@ public class GameManager : MonoBehaviour
 		m_BackgroundPos = m_GameBackground.transform.localPosition;
 		m_StartLerpPos = m_BackgroundPos;
 		m_BackgroundPos.x = GetGameBackgroundPos();
-		m_NewLevel = false;
 	}
 
 	public void OnPause()
@@ -199,6 +219,8 @@ public class GameManager : MonoBehaviour
 
 	public void OnRestart()
 	{
+		m_Pause = true;
+		m_PauseCanvas.SetActive(m_Pause);
 		LevelManager.instance.RestartLevel(LevelManager.instance.GetCurrentLevel());
 		m_NewLevel = true;
 	}

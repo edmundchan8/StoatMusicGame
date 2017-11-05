@@ -87,9 +87,16 @@ public class MusicManager : MonoBehaviour
 		else if (LevelManager.instance.GetCurrentScene() == 2)
 		{
 			m_MusicState = eLevelMusic.Level1;
+			if (m_GameOverScript == null)
+			{
+				m_GameOverScript = GameManager.instance.m_GameOverScript;
+			}
+			if (m_NoteInstantiatePosition == null)
+			{
+				m_NoteInstantiatePosition = GameManager.instance.GetNoteInstantiatePos();
+			}
 		}
-
-
+			
 		if (m_MusicState == eLevelMusic.Menu)
 		{
 			m_Audiosource.clip = MENU_AUDIO;
@@ -119,17 +126,6 @@ public class MusicManager : MonoBehaviour
 				}	
 			}
 		}
-
-		if (m_GameOverScript == null)
-		{
-			m_GameOverScript = GameManager.instance.m_GameOverScript;
-		}
-
-		if (m_NoteInstantiatePosition == null)
-		{
-			m_NoteInstantiatePosition = GameManager.instance.GetNoteInstantiatePos();
-		}
-
 		m_MusicTimer.Update(Time.deltaTime);
 		if (!m_MusicTimer.HasCompleted())
 		{
