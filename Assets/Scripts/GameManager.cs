@@ -25,8 +25,6 @@ public class GameManager : MonoBehaviour
 	float LERP_DURATION = 4f;
 
 	[Header("GameManager Variables")]
-	//Make an instance of Gameobject so we can call this from anywhere
-	public static GameManager instance;
 	int m_CurrentLevel;
 	Vector2 m_StartLerpPos;
 	Vector2 m_BackgroundPos;
@@ -37,19 +35,6 @@ public class GameManager : MonoBehaviour
 	[Header("Timer")]
 	[SerializeField]
 	Timer m_Timer = new Timer();
-
-	void Awake()
-	{
-		if (!instance)
-		{
-			instance = this;
-			DontDestroyOnLoad(instance);
-		}
-		else
-		{
-			Destroy(this.gameObject);
-		}
-	}
 
 	void Update()
 	{
@@ -86,7 +71,6 @@ public class GameManager : MonoBehaviour
 		}
 		m_CurrentLevel = LevelManager.instance.GetCurrentLevel();
 		m_PauseCanvas = GameObject.FindGameObjectWithTag("PauseCanvas");
-		//Set all the objects in m_PauseCanvas to be false
 		if(m_PauseButton == null)
 		{
 			print("found pause button");
