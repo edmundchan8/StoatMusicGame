@@ -40,7 +40,7 @@ public class GameOverScript : MonoBehaviour
 
 	void Update ()
 	{
-		if (gameObject.activeInHierarchy && !GameManager.instance.IsGameOver())
+		if (gameObject.activeInHierarchy && !LevelManager.instance.IsGameOver())
 		{
 			gameObject.SetActive(false);
 		}

@@ -86,14 +86,16 @@ public class MusicManager : MonoBehaviour
 		}
 		else if (LevelManager.instance.GetCurrentScene() == 2)
 		{
-			m_MusicState = eLevelMusic.Level1;
 			if (m_GameOverScript == null)
 			{
-				m_GameOverScript = GameManager.instance.m_GameOverScript;
+				GameObject gameManager = GameObject.FindGameObjectWithTag("GameManager");
+				m_GameOverScript = gameManager.GetComponent<GameManager>().ReturnGameOverScript();
 			}
+			m_MusicState = eLevelMusic.Level1;
 			if (m_NoteInstantiatePosition == null)
 			{
-				m_NoteInstantiatePosition = GameManager.instance.GetNoteInstantiatePos();
+				GameObject gameManager = GameObject.FindGameObjectWithTag("GameManager");
+				m_NoteInstantiatePosition = gameManager.GetComponent<GameManager>().GetNoteInstantiatePos();
 			}
 		}
 			
@@ -134,7 +136,7 @@ public class MusicManager : MonoBehaviour
 
 		float audioTime = m_Audiosource.time;
 
-		if (m_CanInstantiateNote && !GameManager.instance.IsGameOver())
+		if (m_CanInstantiateNote && !LevelManager.instance.IsGameOver())
 		{
 			//n.b. music note takes 2.4f seconds to get to target from instantiate point.
 			if (m_NoteIndexToPlay < m_MusicTimeText.Length)

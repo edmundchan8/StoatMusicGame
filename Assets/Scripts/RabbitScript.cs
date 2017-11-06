@@ -11,21 +11,38 @@ public class RabbitScript : MonoBehaviour
 	bool m_BeginRun = false;
 
 	[Header("Accessor")]
+	GameManager m_GameManager;
 	GameOverScript m_GameOverScript;
 	Animator m_Animator;
 
 	void Start()
 	{
+		Vector2 startPos = transform.localPosition;
+		startPos = new Vector2(4, 0);
+		transform.localPosition = startPos;
 		m_Animator = transform.GetChild(0).GetComponent<Animator>();
 		IsEnteringScene(true);
 		if (m_GameOverScript == null)
 		{
-			m_GameOverScript = GameManager.instance.ReturnGameOverScript();
+			GameObject gameManager = GameObject.FindGameObjectWithTag("GameManager");
+			m_GameManager = gameManager.GetComponent<GameManager>();
+			m_GameOverScript = m_GameManager.ReturnGameOverScript();
 		}
 	}
 
 	void Update()
 	{
+		if (transform.localPosition.x > 2.1f && !LevelManager.instance.IsGameOver())
+		{
+			Vector2 pos = transform.position;
+			pos.x -= Time.deltaTime;
+			transform.position = pos;
+			if (pos.x < 2.1f)
+			{
+				IsEnteringScene(false);
+			}
+		}
+
 		if (m_BeginRun)
 		{
 			transform.Translate(Vector2.right * Time.deltaTime * SPEED);
@@ -38,7 +55,7 @@ public class RabbitScript : MonoBehaviour
 		m_BeginRun = !m_BeginRun;
 		DestroyAfterTime();
 		m_GameOverScript.SetLoseTextActive();
-		GameManager.instance.OnLoseLevel();
+		m_GameManager.OnLoseLevel();
 	}
 
 	public void Bitten()
@@ -58,10 +75,10 @@ public class RabbitScript : MonoBehaviour
 
 	void IncreaseLevelCount()
 	{
-		if (!GameManager.instance.IsGameOver())
+		if (!LevelManager.instance.IsGameOver())
 		{
 			LevelManager.instance.IncrementLevel();
-			GameManager.instance.SetBackgroundLerpPos();
+			m_GameManager.SetBackgroundLerpPos();
 		}
 	}
 

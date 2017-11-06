@@ -13,7 +13,6 @@ public class GameManager : MonoBehaviour
 	GameObject m_Rabbit;
 	GameObject m_Stoat;
 	public GameOverScript m_GameOverScript;
-	bool m_IsGameOver = false;
 	GameObject m_NoteHolder;
 
 	[Header ("Buttons")]
@@ -49,7 +48,7 @@ public class GameManager : MonoBehaviour
 			m_GameBackground.transform.localPosition = Vector2.Lerp(m_StartLerpPos, m_BackgroundPos, (LERP_DURATION - m_Timer.GetTimer()) / LERP_DURATION);
 		}
 
-		if (m_Timer.HasCompleted() && !IsGameOver())
+		if (m_Timer.HasCompleted() && !LevelManager.instance.IsGameOver())
 		{
 			if (m_CanInstantiateRabbit)
 			{
@@ -64,6 +63,7 @@ public class GameManager : MonoBehaviour
 		if (GameObject.FindGameObjectWithTag("Rabbit") == null)
 		{
 			m_CanInstantiateRabbit = true;
+			InstantiateRabbit();
 		}
 		if (m_Stoat == null)
 		{
@@ -73,14 +73,12 @@ public class GameManager : MonoBehaviour
 		m_PauseCanvas = GameObject.FindGameObjectWithTag("PauseCanvas");
 		if(m_PauseButton == null)
 		{
-			print("found pause button");
 			m_PauseButton = GameObject.FindGameObjectWithTag("PauseButton");
 		}
 		if (m_ReturnGameButton == null)
 		{
 			m_ReturnGameButton = GameObject.FindGameObjectWithTag("ReturnGameButton");
 		}
-
 		if (m_ReturnMenuButton == null)
 		{
 			m_ReturnMenuButton = GameObject.FindGameObjectWithTag("MenuButton");
@@ -89,7 +87,6 @@ public class GameManager : MonoBehaviour
 		m_ReturnGameButton.GetComponent<Button>().onClick.AddListener(() => OnPause());
 		m_ReturnMenuButton.GetComponent<Button>().onClick.AddListener(() => ReturnToTitle());
 		m_PauseCanvas.SetActive(m_Pause);
-		print(m_PauseCanvas.activeInHierarchy);
 		if (m_GameOverScript == null)
 		{
 			m_GameOverScript = ReturnGameOverScript();
@@ -182,23 +179,13 @@ public class GameManager : MonoBehaviour
 
 	public void OnLoseLevel()
 	{
-		GameOver();
+		LevelManager.instance.GameOverTrue();
 		m_Stoat.GetComponent<StoatScript>().StopMoving();
-	}
-
-	public void GameOver()
-	{
-		m_IsGameOver = true;
 	}
 
 	public void NewGame()
 	{
-		m_IsGameOver = false;
-	}
-
-	public bool IsGameOver()
-	{
-		return m_IsGameOver;
+		LevelManager.instance.GameOverFalse();
 	}
 
 	public void OnRestart()
@@ -217,5 +204,17 @@ public class GameManager : MonoBehaviour
 	public bool IsGamePaused()
 	{
 		return m_Pause;
+	}
+
+	public GameObject ReturnRabbit()
+	{
+		
+		if (m_Rabbit != null)
+		{
+			print(m_Rabbit);
+			return m_Rabbit;
+		}
+		else
+			return null;
 	}
 }

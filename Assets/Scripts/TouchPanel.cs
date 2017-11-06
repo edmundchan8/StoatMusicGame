@@ -49,6 +49,7 @@ public class TouchPanel : MonoBehaviour
 	GameObject m_Rabbit;
 	[SerializeField]
 	GameObject m_Spark;
+	GameManager m_GameManager;
 
 	float m_MusicTimingHolder = 0f;
 
@@ -88,8 +89,13 @@ public class TouchPanel : MonoBehaviour
 	{
 		if (LevelManager.instance.GetCurrentScene() == GAME_SCENE)
 		{
+			if (m_GameManager == null)
+			{
+				m_GameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+			}
+
 			//TODO To also check if the music is playing too?
-			if (m_Rabbit == null && !GameManager.instance.IsGameOver() && MusicManager.instance.AudioPlaying())
+			if (m_Rabbit == null && !LevelManager.instance.IsGameOver() && MusicManager.instance.AudioPlaying())
 			{
 				m_Rabbit = GameObject.FindGameObjectWithTag("Rabbit");
 				m_RabbitScript = m_Rabbit.GetComponent<RabbitScript>();
@@ -98,7 +104,7 @@ public class TouchPanel : MonoBehaviour
 
 			CheckNumberPoors();
 			//TODO: Code here is to play game with keyboard space bar input only, like debug mode
-			if (Input.GetButtonDown("Space") && !GameManager.instance.IsGamePaused())
+			if (Input.GetButtonDown("Space") && !m_GameManager.IsGamePaused())
 			{
 				//for debug purposes, when we hit space, disable the miss detected code
 				CheckMusicAgainstTiming();
@@ -346,7 +352,7 @@ public class TouchPanel : MonoBehaviour
 	{
 		if (m_NumPoors >= FAIL_LIMIT && m_Rabbit != null)
 			{
-				GameManager.instance.GameOver();
+			LevelManager.instance.GameOverTrue();
 				m_RabbitScript.RunAway();
 			}
 	}

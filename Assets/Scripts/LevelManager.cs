@@ -16,6 +16,7 @@ public class LevelManager : MonoBehaviour
 	int m_CurrentLevel = 1;
 	[SerializeField]
 	string m_LevelToLoad;
+	bool m_IsGameOver = false;
 
 	//check if levelmanager exist, if it does, destroy, else set this to instance
 	void Awake()
@@ -67,12 +68,28 @@ public class LevelManager : MonoBehaviour
 	public void RestartLevel(int level)
 	{
 		print("Need to take in which music to play, that will determine which level we are loading.");
-		GameManager.instance.NewGame();
+		GameObject gameManager = GameObject.FindGameObjectWithTag("GameManager");
+		gameManager.GetComponent<GameManager>().NewGame();
 		SceneManager.LoadScene("GameScene");
 	}
 
 	public void ResetLevelCount()
 	{
 		m_CurrentLevel = 1;
+	}
+
+	public void GameOverTrue()
+	{
+		m_IsGameOver = true;
+	}
+
+	public void GameOverFalse()
+	{
+		m_IsGameOver = false;
+	}
+
+	public bool IsGameOver()
+	{
+		return m_IsGameOver;
 	}
 }

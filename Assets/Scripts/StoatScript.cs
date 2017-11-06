@@ -23,6 +23,7 @@ public class StoatScript : MonoBehaviour
 	GameObject m_RabbitPrefab;
 	GameObject m_CurrentRabbit;
 	TouchPanel m_TouchPanel;
+	GameManager m_GameManager;
 
 	[Header ("Stoat Move Attributes")]
 	[SerializeField]
@@ -38,22 +39,11 @@ public class StoatScript : MonoBehaviour
 		m_Animator = gameObject.transform.GetChild(0).GetComponent<Animator>();	
 		FindRabbit();
 		m_TouchPanel = GameObject.FindGameObjectWithTag("TouchPanel").GetComponent<TouchPanel>();
+		m_GameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
 	}
 
 	void Update()
 	{
-		//TODO - might need to reword this.  When rabbit is destroy, this will still check.
-		//Should probably say, if rabbit is not destroyed && pos.x  >2.1f && is not gameover.
-		if (m_CurrentRabbit != null && m_CurrentRabbit.transform.position.x > 2.1f && !GameManager.instance.IsGameOver())
-		{
-			Vector2 pos = m_CurrentRabbit.transform.position;
-			pos.x -= Time.deltaTime;
-			m_CurrentRabbit.transform.position = pos;
-			if (pos.x < 2.1f)
-			{
-				m_RabbitScript.IsEnteringScene(false);
-			}
-		}
 		//Timer is ticking, move closer to rabbit as long as the current array counter is less than 2 and if music time is less than the value in the 
 		//m_Level01TimerArray[ ] , then set the lerp position and increment m_ArrayCounter
 		m_StoatTimer.Update(Time.deltaTime);
@@ -67,7 +57,7 @@ public class StoatScript : MonoBehaviour
 			}
 		}
 
-		if (!m_CurrentRabbit && !GameManager.instance.IsGameOver())
+		if (!m_CurrentRabbit && !LevelManager.instance.IsGameOver())
 		{
 			FindRabbit();
 		}
@@ -95,16 +85,15 @@ public class StoatScript : MonoBehaviour
 
 	public void FindRabbit()
 	{
-		if (GameManager.instance.InstantiateRabbit() != null)
+		if (m_CurrentRabbit == null)
 		{
 			m_CurrentRabbit = GameObject.FindGameObjectWithTag("Rabbit");
-			Vector2 startPos = m_CurrentRabbit.transform.localPosition;
-			startPos = new Vector2(4, 0);
-			m_CurrentRabbit.transform.localPosition = startPos;
 			m_RabbitScript = m_CurrentRabbit.GetComponentInChildren<RabbitScript>();
 		}
 		else
+		{
 			print("can't find rabbit yet");
+		}
 	}
 
 	public void EndOfLevel()
