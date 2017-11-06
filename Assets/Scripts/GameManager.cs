@@ -60,6 +60,7 @@ public class GameManager : MonoBehaviour
 	public void SetNewLevel()
 	{		
 		m_NewLevel = false;
+		m_Pause = false;
 		if (GameObject.FindGameObjectWithTag("Rabbit") == null)
 		{
 			m_CanInstantiateRabbit = true;
@@ -71,7 +72,7 @@ public class GameManager : MonoBehaviour
 		}
 		m_CurrentLevel = LevelManager.instance.GetCurrentLevel();
 		m_PauseCanvas = GameObject.FindGameObjectWithTag("PauseCanvas");
-		if(m_PauseButton == null)
+		/*if(m_PauseButton == null)
 		{
 			m_PauseButton = GameObject.FindGameObjectWithTag("PauseButton");
 		}
@@ -86,6 +87,7 @@ public class GameManager : MonoBehaviour
 		m_PauseButton.GetComponent<Button>().onClick.AddListener(() => OnPause());
 		m_ReturnGameButton.GetComponent<Button>().onClick.AddListener(() => OnPause());
 		m_ReturnMenuButton.GetComponent<Button>().onClick.AddListener(() => ReturnToTitle());
+		*/
 		m_PauseCanvas.SetActive(m_Pause);
 		if (m_GameOverScript == null)
 		{
@@ -211,7 +213,6 @@ public class GameManager : MonoBehaviour
 		
 		if (m_Rabbit != null)
 		{
-			print(m_Rabbit);
 			return m_Rabbit;
 		}
 		else

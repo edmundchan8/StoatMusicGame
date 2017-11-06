@@ -103,6 +103,7 @@ public class TouchPanel : MonoBehaviour
 			m_MusicTime = MusicManager.instance.GetCurrentMusicTime();
 
 			CheckNumberPoors();
+			print(!m_GameManager.IsGamePaused());
 			//TODO: Code here is to play game with keyboard space bar input only, like debug mode
 			if (Input.GetButtonDown("Space") && !m_GameManager.IsGamePaused())
 			{
