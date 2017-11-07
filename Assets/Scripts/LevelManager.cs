@@ -80,6 +80,9 @@ public class LevelManager : MonoBehaviour
 
 	public void GameOverTrue()
 	{
+		//Set the state to gameover so that, when the game reloads, the state is set back to the level again adn in theory,
+		//the music list should refresh
+		MusicManager.instance.SetStateToGameOver();
 		m_IsGameOver = true;
 	}
 

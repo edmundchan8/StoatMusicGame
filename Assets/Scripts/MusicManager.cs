@@ -19,7 +19,7 @@ public class MusicManager : MonoBehaviour
 	//Because the instantiate gameobject is further away from where we want the touch the note, instantiate the music note 2.6f early.
 	float NOTE_INSTANTIATE_OFFSET = 2.6f;
 	float DELAY_INSTANTIATE_DURATION = 0.3f;
-	float MUSIC_FADE_DURATION = 4f;
+	float MUSIC_FADE_AMOUNT = 0.015f;
 
 	[Header("AudioClips")]
 	[SerializeField]
@@ -30,6 +30,7 @@ public class MusicManager : MonoBehaviour
 	AudioClip LEVEL2_AUDIO;
 	[SerializeField]
 	AudioClip LEVEL3_AUDIO;
+	float DEFAULT_VOLUME = 0.2f;
 
 	[Header ("Music Variables")]
 	public static MusicManager instance;
@@ -55,7 +56,7 @@ public class MusicManager : MonoBehaviour
 
 	public enum eLevelMusic
 	{
-		Splash, Menu, Level1, Level2, Level3
+		Splash, Menu, Level1, Level2, Level3, GameOver
 	};
 
 	private eLevelMusic m_MusicState;
@@ -83,6 +84,8 @@ public class MusicManager : MonoBehaviour
 		if (LevelManager.instance.GetCurrentScene() == 1)
 		{
 			m_MusicState = eLevelMusic.Menu;
+			//variable to set level 1 music is true, then other music levels = false
+			m_SetLevel1Music = true;
 		}
 		else if (LevelManager.instance.GetCurrentScene() == 2)
 		{
@@ -128,10 +131,12 @@ public class MusicManager : MonoBehaviour
 				}	
 			}
 		}
+
+		//Music Timer
 		m_MusicTimer.Update(Time.deltaTime);
 		if (!m_MusicTimer.HasCompleted())
 		{
-			m_Audiosource.volume *= m_MusicTimer.GetTimer()/MUSIC_FADE_DURATION;
+			m_Audiosource.volume -= MUSIC_FADE_AMOUNT;
 		}
 
 		float audioTime = m_Audiosource.time;
@@ -171,6 +176,7 @@ public class MusicManager : MonoBehaviour
 		m_CanInstantiateNote = true;
 	}
 
+	//TODO: This isn't being called sometimes
 	void InstantiateMusicNotes () 
 	{
 		m_CanInstantiateNote = false;
@@ -191,7 +197,7 @@ public class MusicManager : MonoBehaviour
 
 	public void FadeOutMusic()
 	{
-		m_MusicTimer.SetTimer(MUSIC_FADE_DURATION);
+		m_MusicTimer.SetTimer(MUSIC_FADE_AMOUNT);
 	}
 
 	public void PauseMusic()
@@ -213,5 +219,20 @@ public class MusicManager : MonoBehaviour
 	public bool AudioPlaying()
 	{
 		return m_Audiosource.volume > 0f;
+	}
+
+	public void SetStateToGameOver()
+	{
+		m_MusicState = eLevelMusic.GameOver;
+	}
+
+	public void SetMusicTimerZero()
+	{
+		Invoke("SetMusicVolume", 0.5f);
+	}
+
+	public void SetMusicVolume()
+	{
+		m_Audiosource.volume = DEFAULT_VOLUME;
 	}
 }

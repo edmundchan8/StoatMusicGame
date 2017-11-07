@@ -36,6 +36,7 @@ public class RabbitScript : MonoBehaviour
 		{
 			Vector2 pos = transform.position;
 			pos.x -= Time.deltaTime;
+			print(pos);
 			transform.position = pos;
 			if (pos.x < 2.1f)
 			{

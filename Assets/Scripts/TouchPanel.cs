@@ -65,9 +65,9 @@ public class TouchPanel : MonoBehaviour
 	float m_MusicTime;
 
 	[Header ("Counters")]
-	int m_NumExcellents = 0;
-	int m_NumGoods = 0;
-	int m_NumPoors = 0;
+	int m_NumExcellents;
+	int m_NumGoods;
+	int m_NumPoors;
 
 	void Start()
 	{
@@ -103,7 +103,6 @@ public class TouchPanel : MonoBehaviour
 			m_MusicTime = MusicManager.instance.GetCurrentMusicTime();
 
 			CheckNumberPoors();
-			print(!m_GameManager.IsGamePaused());
 			//TODO: Code here is to play game with keyboard space bar input only, like debug mode
 			if (Input.GetButtonDown("Space") && !m_GameManager.IsGamePaused())
 			{
@@ -237,6 +236,13 @@ public class TouchPanel : MonoBehaviour
 			} */	
 	}
 
+	void ResetScores()
+	{
+		m_NumExcellents = 0;
+		m_NumGoods = 0;
+		m_NumPoors = 0;
+	}
+
 	void InstantiateTextGameObject () 
 	{
 		Instantiate(m_TextResult, m_TextPosition.transform.position, transform.rotation, m_TextPosition.transform);
@@ -270,7 +276,6 @@ public class TouchPanel : MonoBehaviour
 		//make note of time which you touched screen
 		//plus an offset
 		float hitTime = m_MusicTime;
-
 		//go through list 
 		for (int i = 0; i < m_MusicList.Count; i++)
 		{
@@ -353,7 +358,7 @@ public class TouchPanel : MonoBehaviour
 	{
 		if (m_NumPoors >= FAIL_LIMIT && m_Rabbit != null)
 			{
-			LevelManager.instance.GameOverTrue();
+				LevelManager.instance.GameOverTrue();
 				m_RabbitScript.RunAway();
 			}
 	}
