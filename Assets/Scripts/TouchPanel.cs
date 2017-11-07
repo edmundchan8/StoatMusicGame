@@ -316,7 +316,6 @@ public class TouchPanel : MonoBehaviour
 			{
 				if (m_MusicTimingHolder == m_MusicList[i])
 				{
-					print("time holder == m_MusicList[" + i + "]");
 					return;
 				}
 				else
